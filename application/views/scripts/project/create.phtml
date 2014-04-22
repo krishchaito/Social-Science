@@ -1,0 +1,162 @@
+<div class="createEditProject">
+    <h2>New Project</h2>
+    <?php echo $this->message; ?>
+    <form action="/project/create" method="POST" autocomplete="off">
+
+        <?php if(!$this->validateStatus) { ?>
+            <div class="errorMsg">Please input all the required fields.</div>
+        <?php } ?>
+
+        <div class="userForm">
+            <div class="clearfix formGrp">
+                <label class="inputLabel">Title <span class="required">*</span></label>
+                <div class="inputEle">
+                    <input id="title" type="text" name="title" size="50" placeholder="Enter your project title" />
+                </div>
+            </div>
+
+            <div class="clearfix formGrp">
+                <label class="inputLabel">Hash tag <span class="required">*</span></label>
+                <div class="inputEle">
+                    # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" readonly />
+                    <button class="primary mediumButton" id="hashTagEdit">Edit</button>
+                </div>
+            </div>
+
+            <div class="clearfix formGrp">
+                <label class="inputLabel">Summary <span class="required">*</span></label>
+                <div class="inputEle">
+                    <input type="text" name="summary" id="summary" size="50" placeholder="Brief description of your project" />
+                </div>
+            </div>
+
+            <div class="clearfix formGrp">
+                <label class="inputLabel">Description <span class="required">*</span></label>
+                <div class="inputEle">
+                    <textarea name="description" id="description" cols="75" rows="10" placeholder="Detailed description of your project"></textarea>
+                </div>
+            </div>
+
+            <div class="sectionGrp">
+                <div class="sectionTitle">Which of the following services you wish to use? <span class="required">*</span></div>
+                <div class="clearfix formGrp">
+                    <div class="inputLabel">
+                        <input type="checkbox" name="useTwitter" size="50" />
+                    </div>
+                    <label class="inputEle">Twitter</label>
+                </div>
+
+                <div class="clearfix formGrp">
+                    <div class="inputLabel">
+                        <input type="checkbox" name="useInstagram" size="50" />
+                    </div>
+                    <label class="inputEle">Instagram</label>
+                </div>
+            </div>
+
+            <div class="clearfix formGrp">
+                <div class="inputLabel">
+                    <input type="checkbox" name="usePicture" size="50" />
+                </div>
+                <label class="inputEle">Attempt to use picture?</label>
+            </div>
+
+            <div class="clearfix formGrp">
+                <div class="inputLabel">
+                    <input type="checkbox" name="gpsReq" size="50" />
+                </div>
+                <label class="inputEle">Is GPS Required?</label>
+            </div>
+
+            <div class="sectionGrp trackInfo">
+                <div class="sectionTitle">What do you want to track? <span class="required">*</span></div>
+                <div id="trackDiv">
+                    <div class="clearfix formGrp trackGrp">
+                        <div class="inputLabel">
+                            <input type="text" name="trackName1" id="trackName1" placeholder="Name" />
+                        </div>
+                        <div class="inputEle">
+                            <input type="text" name="trackValue1" size="50" id="trackValue1" placeholder="Example Value" />
+                        </div>
+                    </div>
+                </div>
+
+                <input type="button" class="primary mediumButton addMore" value="Add More" id="addMore" />
+                <input type="hidden" value="1" name="trackCounter" id="trackCounter" />
+            </div>
+
+            <div>
+                <div class="clearfix formGrp">
+                    <label class="inputLabel">Tweet Format <span class="required">*</span></label>
+                    <div class="inputEle">
+                        <input type="text" name="tweetFormat" size="50" id="tweetFormat" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="formSubmitButtons">
+                <input type="submit" class="primary mediumButton" id="createProj" value="Create" />
+                <input type="button" class="primary mediumButton" id="cancelProj" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Hide "Create New Project" Button
+        $('#newProjectNavButton').hide();
+
+        // Add functionality for cancel button
+        $('#cancelProj').click(function() {
+            var url = "<?php echo $this->onProjCancel; ?>";
+            $(location).attr('href', url);
+        });
+
+        // Add functionality for "Add More" button
+        $("#addMore").click(function() {
+            var length = $(".trackGrp").length + 1;
+            var html = '<div class="clearfix formGrp trackGrp">' +
+                            '<div class="inputLabel">' +
+                                '<input type="text" name="trackName'+length+'" id="trackName'+length+'" placeholder="Name" />' +
+                            '</div>' +
+                            '<div class="inputEle">' +
+                                '<input type="text" name="trackValue'+length+'" size="50" id="trackValue'+length+'" placeholder="Example Value" />' +
+                            '</div>' +
+                        '</div>';
+
+            $('#trackDiv').append(html);
+            $('#trackCounter').val(length);
+        });
+
+        $("input#title").keyup(function(event) {
+            if(event.which != 32) {
+                if(0 == this.value.length) {
+                    $("input#hashTag").val(" ");
+                } else {
+                    var hashTag = this.value.replace(/\s+/g, "-").toLowerCase();
+                    $("input#hashTag").val(hashTag);
+                }
+            }
+
+            event.preventDefault();
+        });
+
+        $("#hashTagEdit").click(function(event) {
+            if('Edit' == this.innerHTML) {
+                $("input#hashTag").prop('disabled', false);
+                this.innerHTML = 'Done';
+                event.preventDefault();
+            } else if('Done' == this.innerHTML) {
+                $("input#hashTag").prop('disabled', true);
+                this.innerHTML = 'Edit';
+                event.preventDefault();
+            }
+
+            event.preventDefault();
+        });
+
+
+    });
+</script>

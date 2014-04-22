@@ -1,0 +1,67 @@
+<div class="projectView">
+    <?php echo $this->render('/project/projectlayout.phtml'); ?>
+
+        <!-- Results Map -->
+        <div class="projectBodyContent projectMapContent">
+            <div id="mapCanvas" class="projectMapCanvas">
+
+            </div>
+        </div>
+    </div> <!-- Closing DIV for the tag opened in projectlayout.phtml -->
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script type="text/javascript">
+    var googleMap;
+    var marker;
+    var coordinates = new Array();
+
+    $(document).ready(function() {
+        // Add active class for Dashboard menu
+        $('.projectsListNav li:nth-child(3)').addClass('activeMenu');
+    });
+
+    $('.projectMapCanvas').click(function() {
+        var s = 9;
+        var t = 0;
+    });
+
+    function placeMarker(latlong, title) {
+        var marker = new google.maps.Marker({
+            position: latlong,
+            map: googleMap,
+            title: title
+        });
+        //marker.setMap(googleMap);
+    }
+
+    <?php if(!empty($this->posts)) { ?>
+        function initialize() {
+            var mapCanvas = document.getElementById('mapCanvas');
+            var myLatlng = new google.maps.LatLng(44.31379623528233, -1.5516471862792969);
+            var map_options = {
+                center: myLatlng,
+                zoom: 3
+            }
+            googleMap = new google.maps.Map(mapCanvas, map_options);
+        }
+
+        // Initialize google maps before we place markers.
+        initialize();
+
+        <?php
+            $count = 0;
+            foreach($this->posts as $post) {
+                $latitude = $post->getCoordinatesLatitude();
+                $longitude = $post->getCoordinatesLongitude();
+
+                if(!empty($longitude) && !empty($latitude)) { ?>
+                    placeMarker(new google.maps.LatLng(<?php echo $latitude ?>, <?php echo $longitude ?>), '<?php echo $post->getText() ?>');
+            <?php
+                    $count++;
+                }
+            }
+        } ?>
+
+    //google.maps.event.addDomListener(window, 'load', initialize);
+</script>

@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Add active class for projects navigation menu
+        $('nav li a#projectNav').addClass('active');
+
+        // Add event to refresh button
+        $('#refreshButton').click(function(event) {
+            var url = '<?php echo '/project/refresh/id/'.$this->id; ?>';
+            $.ajax({url: url,
+                    success: function(data) {
+                        if(200 == data.statusCode) {
+                            location.reload(true);
+                        } else {
+                            alert('An error has occurred. Please try again later.');
+                        }
+                    }
+            });
+        });
+    });
+</script>
+
+<div class="clearfix projectHeader">
+    <div class="projectTitle fleft"> <?php echo $this->project->getTitle(); ?> </div>
+    <div class="fright">
+        <div class="fleft lastUpdate">
+            <span class="colTitle"> Last Updated On: </span> <?php echo $this->postsMetaLastUpdatedOn; ?>
+        </div>
+
+        <div class="fright status">
+            <span class="colTitle">Status: </span>
+            <span class="<?php echo strtolower($this->project->getStatus()); ?>"> <?php echo $this->project->getStatus(); ?> </span>
+        </div>
+    </div>
+</div>
+
+<div class="projectBody"> <!-- This DIV tag should be closed by the view file where this layout was included -->
+    <!-- Project navigation bar -->
+    <div class="projectBodyNavBar">
+        <div class="clearfix">
+            <div class="fleft">
+                <ul class="projectsListNav">
+                    <li><a href="<?php echo '/project/view/id/'.$this->id; ?>">Dashboard</a></li>
+                    <li><a href="<?php echo '/project/results/id/'.$this->id; ?>">Results</a></li>
+                    <li><a href="<?php echo '/project/map/id/'.$this->id; ?>">Map</a></li>
+                </ul>
+            </div>
+
+            <div class="fright">
+                <img src="/img/refresh.png" height="20px" id="refreshButton" class="refreshButton" />
+            </div>
+        </div>
+    </div>

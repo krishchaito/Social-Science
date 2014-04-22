@@ -1,0 +1,116 @@
+<div class="projectView">
+    <?php echo $this->render('/project/projectlayout.phtml'); ?>
+
+        <!-- Results -->
+        <div class="projectBodyContent">
+            <div id="results" class="projectResults">
+                <div class="projectTweetFormat">
+                    <span class="colTitle">Tweet Format: </span> <?php echo $this->project->getTweetFormat(); ?>
+                </div>
+
+                <div class="clearfix resultsContent">
+                    <?php if(!empty($this->posts)) { ?>
+                        <!-- Display Tweets Here -->
+                        <div id="tweetsList" class="tweetsList fleft">
+
+                            <?php foreach($this->posts as $post) { ?>
+
+                                <div class="tweet">
+                                    <div class="clearfix tweetHeading">
+                                        <div class="fleft"><img src="/img/<?php echo strtolower($post->getSource()) ?>.png" style="height: 20px; width: 22px; margin-right: 5px" /></div>
+                                        <div class="tweetName fleft"> <?php echo $post->getUsername() ?> </div>
+                                        <div class="tweetUsername fleft"> @<?php echo $post->getUserScreenName() ?>  </div>
+                                        <div class="tweetTime fleft"> <?php echo $post->getPostCreatedAt() ?> </div>
+                                    </div>
+                                    <div class="tweetMessage">
+                                        <?php echo $post->getText() ?>
+                                    </div>
+                                    <?php $place = $post->getPlace();
+                                    if(!empty($place)) { ?>
+
+                                        <div class="tweetLocation">
+                                            <span class="colTitle">Location: </span><?php echo $post->getPlace(); ?>
+                                        </div>
+
+                                    <?php } ?>
+
+                                    <input type="hidden" value="<?php echo $post->getCoordinatesLongitude() ?>" class="longitude" />
+                                    <input type="hidden" value="<?php echo $post->getCoordinatesLatitude() ?>" class="latitude" />
+                                </div>
+
+                            <?php } ?>
+
+                        </div>
+
+                        <!-- Display Map Here -->
+                        <div id="resultsMapCanvas" class="resultsMapCanvas fright">
+
+                        </div>
+                    <?php } else { ?>
+                        <div>
+                            Tweets/Posts are not available at this time.
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div> <!-- Closing DIV for the tag opened in projectlayout.phtml -->
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    var googleMap;
+    var marker;
+
+    $(document).ready(function() {
+        $('#tweetsList').niceScroll({cursorcolor:"#0070AF"});
+
+        // Add active class for Results menu
+        $('.projectsListNav li:nth-child(2)').addClass('activeMenu');
+
+        // On clicking show this tweet on map
+        $('.tweet').click(function() {
+            $('.tweet').removeClass('tweetSelected');
+            $(this).addClass('tweetSelected');
+
+            // Remove marker on map.
+            if(undefined != marker) {
+                marker.setMap(null);
+            }
+            googleMap.setZoom(2);
+            // Get latitude and longitude coordinates for this post.
+            var latitude = $(this).children('input.latitude').val();
+            var longitude = $(this).children('input.longitude').val();
+
+            if(latitude == "" || longitude == "") {
+                alert('Location details are not available for this message.');
+            } else {
+                // Show marker on map
+                var myLatlng = new google.maps.LatLng(latitude, longitude);
+                marker = new google.maps.Marker({
+                    position: myLatlng,
+                    //animation:google.maps.Animation.BOUNCE,
+                    map: googleMap
+                });
+
+                // Set zoom level and center the map.
+                googleMap.setZoom(10);
+                googleMap.setCenter(marker.getPosition());
+            }
+        });
+    });
+
+    <?php if(!empty($this->posts)) { ?>
+        function initialize() {
+            var map_canvas = document.getElementById('resultsMapCanvas');
+
+            var myLatlng = new google.maps.LatLng(44.31379623528233, -1.5516471862792969);
+            var map_options = {
+                center: myLatlng,
+                zoom: 2
+            }
+            googleMap = new google.maps.Map(map_canvas, map_options);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    <?php } ?>
+</script>

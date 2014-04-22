@@ -1,0 +1,71 @@
+<div class="projectsList">
+    <div>
+        <div class="clearfix">
+            <div class="fleft">
+                <ul class="projectsListNav">
+                    <li><a href="#">Active</a></li>
+                    <li><a href="#">Closed</a></li>
+                    <li class="activeMenu"><a href="#">All</a></li>
+                </ul>
+            </div>
+
+            <div class="fright">
+                <div class="searchbar">
+                    <input type="text" name="search" placeholder="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix projectsListContent">
+        <?php foreach($this->projects as $project) { ?>
+            <div class="projectContent">
+                <div class="projectHeader">
+                    <span id="<?php echo $project->getId(); ?>" class="projectTitle"> <?php echo $project->getTitle(); ?> </span>
+                </div>
+
+                <div class="projectDetails clearfix">
+                    <div class="projectSummary"><span class="colTitle">Summary: </span> <?php echo $project->getSummary(); ?> </div>
+
+                    <div class="projectData">
+                        <div class="projectDataCol fleft">
+                            <div class="projectTag">
+                                <span class="colTitle">Tag: </span> <?php echo $project->getHashTag(); ?>
+                            </div>
+                            <div class="projectLastUpdate">
+                                <span class="colTitle">Last Update: </span> NA
+                            </div>
+                        </div>
+
+                        <div class="projectDataCol fleft">
+                            <div class="projectTweets">
+                                <span class="colTitle">No: of Tweets: </span> 0
+                            </div>
+                            <div class="projectInstagramPosts">
+                                <span class="colTitle">No: of Instagram Posts: </span> 0
+                            </div>
+                        </div>
+
+                        <div class="projectDataCol fleft">
+                            <div class="projectTweets">
+                                <span class="colTitle">Status: </span> <span class="<?php echo strtolower($project->getStatus()) ?>"> <?php echo $project->getStatus() ?> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.projectHeader').click(function(event) {
+            var url = $(location).attr('protocol') + '//' + $(location).attr('hostname') + '/project/view/id/' + $(this).children('span')[0].id;
+            $(location).attr('href', url);
+        });
+
+        // Add active class for projects navigation menu
+        $('nav li a#projectNav').addClass('active');
+    });
+</script>

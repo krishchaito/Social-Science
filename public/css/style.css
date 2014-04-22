@@ -1,0 +1,440 @@
+@CHARSET "ISO-8859-1";
+
+body {
+    height: 100%;
+    max-height: 100%;
+    background: #f4f4f4;
+    font-family: 'Open Sans', sans-serif;
+    color: #1d1f21;
+    text-rendering: optimizeLegibility;
+}
+
+.fleft {float:left;}
+.fright {float:right;}
+.clear {clear: both;}
+
+/*-------------------------------- #HEADER --------------------------------*/
+#header {
+    font-family: 'Roboto', sans-serif;
+    width: 100%;
+    min-width: 980px;
+    height: 60px;
+    line-height: 53px;
+    background: #2E2E2E;
+    margin: 0 auto;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    -webkit-box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.1);
+    -moz-box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.1);
+    box-shadow: 0 -1px 5px rgba(50, 50, 50, 0.1);
+}
+
+#header h1 {
+    font-weight: 300;
+    color: #DFFBEB;
+}
+
+.headerleft {
+    float: left;
+    width: 65%;
+    margin-left: 20px
+}
+
+.headerright {
+    margin-right: 30px;
+}
+
+.logo {
+    margin: 0 10px 0 0px;
+    border-right: 1px solid #eee;
+    float: left;
+    width: 180px;
+    height: 60px;
+}
+
+.menu {
+    float: left;
+    width: auto;
+}
+
+nav ul{
+    list-style: none;
+}
+
+nav li {
+    display: block;
+    float: left;
+}
+
+nav li a{ 
+    font-size: 16px;
+    color: #FFFFFF;
+    display: block; 
+    padding: 0 15px;
+    margin: 0px;
+    height: 57px;
+    margin-right: 1px;
+    border-bottom: 3px solid #2E2E2E;
+    text-decoration: none;
+}
+
+nav li a:hover, nav li a.active {
+    color: #FFF;
+    border-bottom: 3px solid #FF0000;
+    background: #484848;
+    text-shadow: 0 1px rgba(0,0,0,0.5);
+}
+
+/*-------------------------------- Body Container --------------------------------*/
+.mainContainer {
+    max-width: 100%;
+    min-width: 1000px;
+    margin: 0 auto;
+    margin-top: 63px;
+    position: relative;
+    zoom: 1;
+    padding: 15px 30px;
+    min-height: 700px;
+}
+
+/*-------------------------------- #FOOTER --------------------------------*/
+#footer {
+    max-width: 100%;
+    min-width: 1000px;
+    height: 40px;
+    background: #0e0e0e;
+    zoom: 1;
+    margin: 0 auto;
+}
+
+#footer p {
+    padding: 10px;
+    color: white;
+}
+
+#footer a {
+    color: white;
+    border-bottom: 1px dotted white;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    border-bottom-style: solid;
+}
+
+/*-------------------------------- Home page --------------------------------*/
+.home-page {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+/*-------------------------------- Buttons Styles --------------------------------*/
+.navButtonGroup,.actionTabGroup {
+    padding: 15px 0px;
+}
+
+.navButtonGroup:before,.navButtonGroup:after,.actionTabGroup:before,.actionTabGroup:after {
+    display: table;
+    content: "";
+}
+
+.navButtonGroup:after,.actionTabGroup:after {
+    clear: both;
+}
+
+.navButton {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.navButton + .navButton {
+    margin-left: 5px;
+}
+
+.navButton:active {
+    top: 1px;
+}
+
+/*-------------------------------- Buttons Themes --------------------------------*/
+.primary {
+    background: #0070af;
+    color: #fff;
+    font-weight: 400;
+    font-size: 12px;
+    border: none;
+    padding: 4px 12px;
+    text-shadow: 0 1px 1px rgba(102,178,188,0.5);
+}
+
+.primary:hover {
+    background: #01598a;
+    cursor: pointer;
+    color: #FFF;
+}
+
+/*-------------------------------- Buttons Sizes --------------------------------*/
+.mediumButton {
+    padding: 6px 15px;
+    font-size: 13px;
+}
+
+/*-------------------------------- Projects List Navigation Bar --------------------------------*/
+.projectsListNav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.projectsListNav li {
+    float: left;
+}
+
+.projectsListNav li.activeMenu {
+    border-bottom: 3px solid rgba(12, 20, 197, 0.99);
+}
+
+.projectsListNav li a {
+    display: block;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 3px 15px;
+    text-decoration: none;
+    color: rgba(1, 1, 1, 0.86);
+    text-align: center;
+}
+
+/*-------------------------------- Projects List Content --------------------------------*/
+.projectsList .projectsListContent {
+    padding: 0px;
+    margin: 10px 0;
+    display: block;
+}
+
+.projectsList .projectContent {
+    background: #FFFFFF;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 15px;
+}
+
+.projectsList .projectHeader {
+    font-size: 14px;
+    font-weight: 800;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    color: #004A66;
+    cursor: pointer;
+    border-bottom: 1px dotted #d1d1d1;
+}
+
+.projectsList .projectDetails {
+    font-size: 14px;
+    color: #5F81A5;
+}
+
+.projectsList .projectData {
+    margin-top: 10px;
+}
+
+.projectsList .projectDataCol {
+    margin-right: 30px;
+}
+
+.projectContent .colTitle {
+    padding-right: 5px;
+    color: #0e466d;
+}
+
+.projectsList .closed {
+    color: #ae0000;
+}
+
+.projectsList .active {
+    color: #72ad88;
+}
+
+/*-------------------------------- Project View --------------------------------*/
+.projectView {
+    background: #FFFFFF;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.projectView .projectHeader {
+    color: #5F81A5;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px dotted #d1d1d1;
+}
+
+.projectView .projectTitle {
+    color: #0E466D;
+}
+
+.projectView .colTitle {
+    padding-right: 5px;
+    color: #0e466d;
+}
+
+.projectView .closed {
+    color: #ae0000;
+}
+
+.projectView .active {
+    color: #72ad88;
+}
+
+.projectView .projectHeader .fright div {
+    margin-left: 90px;
+    margin-right: 10px;
+}
+
+.projectBodyNavBar {
+    background: #F0F0F0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.projectView .projectBodyContent {
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.projectView .projectTweetFormat {
+    text-align: center;
+    padding: 10px
+}
+
+.projectDesc p {
+    margin-bottom: 20px;
+}
+
+.resultsContent {
+    margin-top: 20px;
+}
+
+.tweetsList {
+    height: 500px;
+    width: 45%;
+}
+
+.tweetHeading {
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-bottom: 1px dotted #d1d1d1;
+}
+
+.tweetHeading .tweetTime {
+    margin-left: 25px;
+}
+
+.tweetUsername {
+    margin-left: 10px;
+}
+
+.tweet {
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #d1d1d1;
+}
+
+.resultsMapCanvas {
+    width: 50%;
+    height: 500px;
+}
+
+.createEditProject, .projectSuccess {
+    padding: 20px;
+    width: 70%;
+    margin: 0px auto;
+    border-radius: 20px;
+    background: #FFFFFF;
+}
+
+.formGrp {
+    margin-bottom: 10px;
+}
+
+.errorMsg, .required {
+    color: #FF0000;
+}
+
+.inputLabel {
+    margin-right: 15px;
+    text-align: right;
+    width: 16%;
+    float: left;
+}
+
+.inputEle {
+    width: 80%;
+    float: left;
+}
+
+.userForm {
+    padding: 20px;
+}
+
+.formSubmitButtons {
+    width: 50%;
+    margin: 30px auto 0px;
+}
+
+.sectionTitle {
+    padding: 10px;
+}
+
+.sectionGrp {
+    border: 1px dotted #d1d1d1;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.sectionGrp.trackInfo .formGrp {
+    padding-left: 20px;
+}
+
+.addMore {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.projectSuccess div {
+    padding: 10px;
+}
+
+.projectSuccess .colTitle {
+    padding-right: 5px;
+    color: #0e466d;
+}
+
+.projectSuccess a {
+    color: #000000;
+}
+
+.projectView .projectMapContent {
+    padding: 0px;
+}
+
+.projectMapCanvas {
+   height: 600px;
+}
+
+.refreshButton {
+    cursor: pointer;
+}
+
+.tweetSelected {
+    background-color: #E1E8ED;
+}

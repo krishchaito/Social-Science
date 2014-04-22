@@ -1,0 +1,25 @@
+<?php
+
+class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+{
+    protected function _initPlaceholders()
+    {
+        // Set the DOC type
+        $this->bootstrap('View');
+        $view = $this->getResource('View');
+        $view->doctype('HTML5');
+
+        // Set the initial title and separator:
+        $view->headTitle('TweetMap')
+             ->setSeparator(' - ');
+
+        // Set StyleSheets
+        $view->headLink()->prependStylesheet('/css/reset.css');
+        $view->headLink()->appendStylesheet('/css/style.css');
+
+        // Set Javascript Libs
+        $view->headScript()->prependFile('/js/jquery.js');
+        $view->headScript()->appendFile('/js/jquery.nicescroll.js');
+    }
+}
+

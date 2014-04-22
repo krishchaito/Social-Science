@@ -1,0 +1,25 @@
+<div class="projectView">
+    <?php echo $this->render('/project/projectlayout.phtml'); ?>
+
+        <!-- Dashboard -->
+        <div class="projectBodyContent">
+            <div id="dashboard" class="projectDesc">
+                <p><?php echo $this->project->getDescription() ?></p>
+
+                <div class="projectTweetFormat">
+                    <span class="colTitle">Tweet Format: </span> <?php echo $this->project->getTweetFormat(); ?>
+                </div>
+            </div>
+        </div>
+    </div> <!-- Closing DIV for the tag opened in projectlayout.phtml -->
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Add active class for Dashboard menu
+        $('.projectsListNav li:nth-child(1)').addClass('activeMenu');
+
+        // Hide refresh button
+        $('#refreshButton').hide();
+    });
+</script>
