@@ -4,7 +4,7 @@
     <projectProfileFile filesystemName=".zfproject.xml"/>
     <applicationDirectory classNamePrefix="Application_">
       <configsDirectory>
-        <applicationConfigFile type="ini"/>
+        <applicationConfigFile type="json"/>
       </configsDirectory>
       <controllersDirectory>
         <controllerFile controllerName="Index">

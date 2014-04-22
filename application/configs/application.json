@@ -1,0 +1,65 @@
+{
+    "production": {
+        "phpSettings": {
+            "display_startup_errors": false,
+            "display_errors": false
+        },
+        "includePaths": {
+            "library": "APPLICATION_PATH/../library"
+        },
+        "bootstrap": {
+            "path": "APPLICATION_PATH/Bootstrap.php",
+            "class": "Bootstrap"
+        },
+        "appnamespace": "Application",
+        "resources": {
+            "frontController": {
+                "controllerDirectory": "APPLICATION_PATH/controllers",
+                "params": {
+                    "displayExceptions": false
+                }
+            },
+            "db": {
+                "adapter": "Mysqli",
+                "params": {
+                    "host": "localhost",
+                    "username": "atrizine",
+                    "password": "zKqHMQTT23S5eQ3T",
+                    "dbname": "atrizine"
+                }
+            },
+            "layout": {
+                "layoutPath": "APPLICATION_PATH/layouts/scripts/"
+            },
+            "view": []
+        },
+        "autoloaderNamespaces": ["Tm_"]
+    },
+
+    "staging":{
+        "_extends": "production"
+    },
+
+    "testing":{
+        "_extends": "production",
+        "phpSettings":{
+            "display_startup_errors": true,
+            "display_errors": true
+        }
+    },
+
+    "development":{
+        "_extends": "production",
+        "phpSettings":{
+            "display_startup_errors": true,
+            "display_errors": true
+        },
+        "resources":{
+            "frontController":{
+                "params":{
+                    "displayExceptions": true
+                }
+            }
+        }
+    }
+}
