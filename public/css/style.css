@@ -99,6 +99,18 @@ nav li a:hover, nav li a.active {
     min-height: 700px;
 }
 
+/*-------------------------------- Loading Image --------------------------------*/
+.loading {
+    background: url("/img/loader.gif") no-repeat scroll 50% 50% rgba(255, 255, 255, 0.8);
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 /*-------------------------------- #FOOTER --------------------------------*/
 #footer {
     max-width: 100%;

@@ -23,6 +23,11 @@
             $(window).resize(function() {
                 $("html").getNiceScroll().resize();
             });
+
+            $(document).on({
+                ajaxStart: function() { $("#loading").show()},
+                ajaxStop: function() { $("#loading").hide()}
+            });
         });
     </script>
 
@@ -61,6 +66,7 @@
 
     <!----------- Body Start ----------->
     <div class="mainContainer">
+        <div class="loading" id="loading"> </div>
         <?php echo $this->layout()->content; ?>
     </div>
     <!----------- Body End ----------->
