@@ -2,8 +2,6 @@
 /**
  * Created by PhpStorm.
  * User: vyeddula
- * Date: 4/17/14
- * Time: 12:52 PM
  */
 
 /**
@@ -31,5 +29,10 @@ class Tm_Project
     {
         $postsMapper = new Application_Model_PostsMetaMapper();
         return $postsMapper->fetchByMetaKeyDesc($metaKey, $projectId);
+    }
+
+    static public function getDomainUrl() {
+        $protocol = (isset($_SERVER['REQUEST_SCHEME'])) ? $_SERVER['REQUEST_SCHEME']: 'http';
+        return $protocol.'://'.$_SERVER['HTTP_HOST'];
     }
 }

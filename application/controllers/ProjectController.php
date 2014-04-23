@@ -28,15 +28,15 @@ class ProjectController extends Zend_Controller_Action
      */
     public function createAction()
     {
-        $validateStatus = true;
+        $hasError = false;
         $errors = array();
 
         if($this->getRequest()->isPost()) {
             $postData = $this->getRequest()->getParams();
 
             // Validate user entered data.
-            list($validateStatus, $errors) = Tm_Validate::newProjectForm($postData);
-            if($validateStatus) {
+            list($hasError, $errors) = Tm_Validate::newProjectForm($postData);
+            if(!$hasError) {
                 $postData['hashTag'] = '#'.$postData['hashTag'];
                 $postData['pid'] = md5($postData['title']);
                 $postData['createdDateTime'] = date(Tm_Constants::MySqlDateTime);
@@ -62,7 +62,7 @@ class ProjectController extends Zend_Controller_Action
             $this->view->onProjCancel = $_SERVER['HTTP_REFERER'];
         }
 
-        $this->view->validateStatus = $validateStatus;
+        $this->view->hasError = $hasError;
         $this->view->errors = $errors;
     }
 
@@ -78,8 +78,23 @@ class ProjectController extends Zend_Controller_Action
             $this->redirect('/projects');
         }
         $id = $params['id'];
+        $project = Tm_Project::getById($id);
+
+        $tweetFormat = $project->getTweetFormat();
+//        $tweetFormatArr = explode(' ', $tweetFormat);
+//
+//        $trackNameStr = '';
+//        $trackValueStr = '';
+//        $trackData = unserialize($project->getTrackData());
+//        foreach ($trackData as $key => $value) {
+//            $trackNameStr .= ' '.$key;
+//            $trackValueStr .= ' '.$value;
+//        }
 
         $this->view->id = $id;
+        $this->view->domainUrl = Tm_Project::getDomainUrl();
+        $this->view->project = $project;
+        $this->view->tweetFormat = $tweetFormat;
     }
 
     /**

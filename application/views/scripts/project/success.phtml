@@ -1,1 +1,29 @@
-<?php echo 'Project created successfully'; ?>
+<div class="projectSuccess">
+    <div class="">
+        <span> Project Home Page: </span>
+        <a class="colTitle" href="<?php echo '/project/view/id/'.$this->id; ?>"> <?php echo $this->domainUrl.'/project/view/id/'.$this->id; ?> </a>
+    </div>
+
+    <div class="">
+        <span> Results: </span>
+        <a class="colTitle" href="<?php echo '/project/results/id/'.$this->id; ?>"> <?php echo $this->domainUrl.'/project/results/id/'.$this->id; ?> </a>
+    </div>
+
+<!--    <div class="">-->
+<!--        <span class="colTitle"> Manage/Edit: </span> <a href="--><?php //echo $projectEdit; ?><!--"> --><?php //echo $projectEdit; ?><!-- </a>-->
+<!--    </div>-->
+
+    <div>
+        <span> Tweet Format: </span> <span class="colTitle"><?php echo $this->tweetFormat; ?></span>
+    </div>
+
+<!--    <div>-->
+<!--        <span class="colTitle"> Email Me: </span> <input type="email" name="email" /> <input type="button" class="primary mediumButton" value="Send" />-->
+<!--    </div>-->
+
+<!--    <input type="button" class="primary mediumButton printInstructions" value="Print Instructions" />-->
+</div>
+
+<div class="printContent" style="display: block;">
+
+</div>

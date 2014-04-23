@@ -1,9 +1,9 @@
 <div class="createEditProject">
-    <h2>New Project</h2>
+    <h2 class="newProject">New Project</h2>
     <?php echo $this->message; ?>
     <form action="/project/create" method="POST" autocomplete="off">
 
-        <?php if(!$this->validateStatus) { ?>
+        <?php if($this->hasError) { ?>
             <div class="errorMsg">Please input all the required fields.</div>
         <?php } ?>
 
@@ -18,8 +18,8 @@
             <div class="clearfix formGrp">
                 <label class="inputLabel">Hash tag <span class="required">*</span></label>
                 <div class="inputEle">
-                    # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" readonly />
-                    <button class="primary mediumButton" id="hashTagEdit">Edit</button>
+                    # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" />
+<!--                    <button class="primary mediumButton" id="hashTagEdit">Edit</button>-->
                 </div>
             </div>
 
@@ -73,10 +73,10 @@
                 <div id="trackDiv">
                     <div class="clearfix formGrp trackGrp">
                         <div class="inputLabel">
-                            <input type="text" name="trackName1" id="trackName1" placeholder="Name" />
+                            <input type="text" name="trackName1" id="trackName1" placeholder="Name" class="trackName" />
                         </div>
                         <div class="inputEle">
-                            <input type="text" name="trackValue1" size="50" id="trackValue1" placeholder="Example Value" />
+                            <input type="text" name="trackValue1" size="50" id="trackValue1" placeholder="Example Value" class="trackvalue" />
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                 <div class="clearfix formGrp">
                     <label class="inputLabel">Tweet Format <span class="required">*</span></label>
                     <div class="inputEle">
-                        <input type="text" name="tweetFormat" size="50" id="tweetFormat" />
+                        <input type="text" name="tweetFormat" size="50" id="tweetFormat" placeholder="Your tweet format" />
                     </div>
                 </div>
             </div>
@@ -104,6 +104,24 @@
 
 
 <script type="text/javascript">
+    function generateTweetFormat() {
+        var hashTag = $("input#hashTag").val();
+        if(!hashTag) {
+            $('#tweetFormat').val('');
+            return;
+        }
+
+        hashTag = '#' + hashTag;
+        var trackNameStr = '';
+        $('.trackName').each(function(index, ele) {
+            if(ele.value) {
+                trackNameStr = trackNameStr + ' ' + ele.value.trim();
+            }
+        });
+
+        $('#tweetFormat').val(hashTag + trackNameStr);
+    }
+
     $(document).ready(function () {
         // Hide "Create New Project" Button
         $('#newProjectNavButton').hide();
@@ -119,43 +137,52 @@
             var length = $(".trackGrp").length + 1;
             var html = '<div class="clearfix formGrp trackGrp">' +
                             '<div class="inputLabel">' +
-                                '<input type="text" name="trackName'+length+'" id="trackName'+length+'" placeholder="Name" />' +
+                                '<input type="text" name="trackName'+length+'" id="trackName'+length+'" placeholder="Name" class="trackName" />' +
                             '</div>' +
                             '<div class="inputEle">' +
-                                '<input type="text" name="trackValue'+length+'" size="50" id="trackValue'+length+'" placeholder="Example Value" />' +
+                                '<input type="text" name="trackValue'+length+'" size="50" id="trackValue'+length+'" placeholder="Example Value" class="trackvalue" />' +
                             '</div>' +
                         '</div>';
 
             $('#trackDiv').append(html);
             $('#trackCounter').val(length);
+            $('#trackName'+length).focusout(function(event) {
+                generateTweetFormat();
+            });
         });
 
-        $("input#title").keyup(function(event) {
-            if(event.which != 32) {
-                if(0 == this.value.length) {
-                    $("input#hashTag").val(" ");
-                } else {
-                    var hashTag = this.value.replace(/\s+/g, "-").toLowerCase();
-                    $("input#hashTag").val(hashTag);
-                }
-            }
-
+        // Auto Suggest hashtag based on project title
+        $("input#title").focusout(function(event) {
+            var hashTag = this.value.replace(/\s+/g, "").toLowerCase();
+            $("input#hashTag").val(hashTag);
+            generateTweetFormat();
             event.preventDefault();
         });
 
-        $("#hashTagEdit").click(function(event) {
-            if('Edit' == this.innerHTML) {
-                $("input#hashTag").prop('disabled', false);
-                this.innerHTML = 'Done';
-                event.preventDefault();
-            } else if('Done' == this.innerHTML) {
-                $("input#hashTag").prop('disabled', true);
-                this.innerHTML = 'Edit';
-                event.preventDefault();
-            }
-
-            event.preventDefault();
+        // Auto Suggest tweet format based on hashtag and track data.
+        $("input#hashTag").focusout(function(event) {
+            var hashTag = '#' + $("input#hashTag").val();
+            $("input#tweetFormat").val(hashTag);
         });
+
+        // Generate tweet format
+        $(".trackName").focusout(function(event) {
+            generateTweetFormat();
+        });
+
+//        $("#hashTagEdit").click(function(event) {
+//            if('Edit' == this.innerHTML) {
+//                $("input#hashTag").prop('disabled', false);
+//                this.innerHTML = 'Done';
+//                event.preventDefault();
+//            } else if('Done' == this.innerHTML) {
+//                $("input#hashTag").prop('disabled', true);
+//                this.innerHTML = 'Edit';
+//                event.preventDefault();
+//            }
+//
+//            event.preventDefault();
+//        });
 
 
     });

@@ -5,25 +5,25 @@ class Tm_Validate
     static public function newProjectForm(&$postData)
     {
         $errors = array();
-        $status = true;
+        $hasError = false;
 
-        $postData['title'] = Tm_Atrizine::GetValue($postData['title'], '');
-        $postData['hashTag'] = Tm_Atrizine::GetValue($postData['hashTag'], '');
-        $postData['summary'] = Tm_Atrizine::GetValue($postData['summary'], '');
-        $postData['description'] = Tm_Atrizine::GetValue($postData['description'], '');
+        $postData['title'] = trim(Tm_Atrizine::GetValue($postData['title'], ''));
+        $postData['hashTag'] = trim(Tm_Atrizine::GetValue($postData['hashTag'], ''));
+        $postData['summary'] = trim(Tm_Atrizine::GetValue($postData['summary'], ''));
+        $postData['description'] = trim(Tm_Atrizine::GetValue($postData['description'], ''));
         $postData['useTwitter'] = ('on' === Tm_Atrizine::GetValue($postData['useTwitter'], 0)) ? 1 : 0;
         $postData['useInstagram'] = ('on' === Tm_Atrizine::GetValue($postData['useInstagram'], 0)) ? 1 : 0;
         $postData['usePicture'] = ('on' === Tm_Atrizine::GetValue($postData['usePicture'], 0)) ? 1 : 0;
         $postData['gpsReq'] = ('on' === Tm_Atrizine::GetValue($postData['gpsReq'], 0)) ? 1 : 0;
-        $postData['tweetFormat'] = Tm_Atrizine::GetValue($postData['tweetFormat'], '');
+        $postData['tweetFormat'] = trim(Tm_Atrizine::GetValue($postData['tweetFormat'], ''));
 
         $trackCounter = $postData['trackCounter'];
         $trackData = array();
         $hasTrackData = false;
         if($trackCounter > 0) {
             for($count = 1; $count <= $trackCounter; $count++) {
-                $key = Tm_Atrizine::GetValue($postData['trackName'.$count], '');
-                $value = Tm_Atrizine::GetValue($postData['trackValue'.$count], '');
+                $key = trim(Tm_Atrizine::GetValue($postData['trackName'.$count], ''));
+                $value = trim(Tm_Atrizine::GetValue($postData['trackValue'.$count], ''));
                 if(!empty($key)) {
                     $hasTrackData = true;
                     $trackData[$key] = $value;
@@ -33,12 +33,12 @@ class Tm_Validate
         $postData['trackData'] = serialize($trackData);
 
         if(!$hasTrackData || empty($postData['title']) || empty($postData['hashTag']) || empty($postData['summary']) || empty($postData['description']) || empty($postData['tweetFormat'])) {
-            $status = false;
+            $hasError = true;
         }
 
         if(!$postData['useTwitter'] && !$postData['useInstagram']) {
-            $status = false;
+            $hasError = true;
         }
-        return array($status, $errors);
+        return array($hasError, $errors);
     }
 }
