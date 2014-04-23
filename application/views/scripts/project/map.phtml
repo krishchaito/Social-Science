@@ -29,8 +29,8 @@
     function placeMarker(latlong, title) {
         var marker = new google.maps.Marker({
             position: latlong,
-            map: googleMap,
-            title: title
+            map: googleMap
+            //title: title
         });
         //marker.setMap(googleMap);
     }
@@ -56,12 +56,14 @@
                 $longitude = $post->getCoordinatesLongitude();
 
                 if(!empty($longitude) && !empty($latitude)) { ?>
-                    placeMarker(new google.maps.LatLng(<?php echo $latitude ?>, <?php echo $longitude ?>), '<?php echo $post->getText() ?>');
+                    placeMarker(new google.maps.LatLng(<?php echo $latitude ?>, <?php echo $longitude ?>));
             <?php
                     $count++;
                 }
             }
-        } ?>
+        } else { ?>
+            $('#mapCanvas').html('Tweets/Posts are not available at this time.');
+        <?php } ?>
 
-    //google.maps.event.addDomListener(window, 'load', initialize);
+        //google.maps.event.addDomListener(window, 'load', initialize);
 </script>
