@@ -59,6 +59,15 @@
                 "params":{
                     "displayExceptions": true
                 }
+            },
+            "db": {
+                "adapter": "Mysqli",
+                "params": {
+                    "host": "localhost",
+                    "username": "root",
+                    "password": "",
+                    "dbname": "atrizine"
+                }
             }
         }
     }
