@@ -21,52 +21,18 @@
 <!--        <span class="colTitle"> Email Me: </span> <input type="email" name="email" /> <input type="button" class="primary mediumButton" value="Send" />-->
 <!--    </div>-->
 
+    <!-- Print Instructions Button -->
     <input type="button" class="primary mediumButton printInstructionsBut" id="printInstructionsBut" value="Print Instructions" />
 </div>
 
+<!-- Print Instructions -->
 <div class="printContent" id="printContent" style="display: none;">
-    <html>
-        <head>
-            <title> <?php echo $this->project->getTitle(); ?> </title>
-            <link rel="stylesheet" type="text/css" href="/css/style.css" />
-        </head>
-        <body>
-            <div class="printInstructionsContent">
-                <p><?php echo $this->project->getDescription() ?></p>
-
-                <div class="projectTweetFormat">
-                    <span class="colTitle">Tweet Format: </span> <?php echo $this->project->getTweetFormat(); ?>
-                </div>
-
-                <div class="specialInstructions">
-                    <div class="note">Note:</div>
-                    <ul>
-                        <?php if($this->project->getUseTwitter() && $this->project->getUseInstagram()) { ?>
-                            <li class="bulletPoint"> You can use both Twitter and Instagram to post your message.</li>
-                        <?php } elseif($this->project->getUseTwitter()) { ?>
-                            <li class="bulletPoint"> Use Twitter to post your message.</li>
-                        <?php } elseif($this->project->getUseInstagram()) { ?>
-                            <li class="bulletPoint"> Use Instagram to post your message.</li>
-                        <?php } ?>
-
-
-                        <?php if($this->project->getGpsReq()) { ?>
-                            <li class="bulletPoint"> Please make sure that location service is turned on before you tweet/post.</li>
-                        <?php } ?>
-
-
-                        <?php if($this->project->getUsePicture()) { ?>
-                            <li class="bulletPoint"> Please post the image of the test.</li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
-        </body>
-    </html>
+    <?php echo $this->render('/project/printInstructions.phtml'); ?>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
+        // Open print window
         $('#printInstructionsBut').click(function() {
             printContent('printContent');
         });

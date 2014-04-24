@@ -11,6 +11,15 @@
                 </div>
             </div>
         </div>
+
+        <!-- Print Instructions Button -->
+        <input type="button" class="primary mediumButton printInstructionsBut" id="printInstructionsBut" value="Print Instructions" />
+
+        <!-- Print Instructions -->
+        <div class="printContent" id="printContent" style="display: none;">
+            <?php echo $this->render('/project/printInstructions.phtml'); ?>
+        </div>
+
     </div> <!-- Closing DIV for the tag opened in projectlayout.phtml -->
 </div>
 
@@ -21,5 +30,10 @@
 
         // Hide refresh button
         $('#refreshButton').hide();
+
+        // Open print window
+        $('#printInstructionsBut').click(function() {
+            printContent('printContent');
+        });
     });
 </script>
