@@ -80,7 +80,6 @@ class ProjectController extends Zend_Controller_Action
         $id = $params['id'];
         $project = Tm_Project::getById($id);
 
-        $tweetFormat = $project->getTweetFormat();
 //        $tweetFormatArr = explode(' ', $tweetFormat);
 //
 //        $trackNameStr = '';
@@ -94,7 +93,6 @@ class ProjectController extends Zend_Controller_Action
         $this->view->id = $id;
         $this->view->domainUrl = Tm_Project::getDomainUrl();
         $this->view->project = $project;
-        $this->view->tweetFormat = $tweetFormat;
     }
 
     /**

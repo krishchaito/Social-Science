@@ -14,7 +14,7 @@ class Tm_Instagram
     protected $savedResultsCount = 0;
     protected $sinceId = 0;
     protected $lastPostCreatedAt;
-    
+
     /**
      * @var Object Application_Model_Projects
      */

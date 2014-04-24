@@ -1,8 +1,6 @@
 @CHARSET "ISO-8859-1";
 
 body {
-    height: 100%;
-    max-height: 100%;
     background: #f4f4f4;
     font-family: 'Open Sans', sans-serif;
     color: #1d1f21;
@@ -462,4 +460,29 @@ nav li a:hover, nav li a.active {
 
 .tweetSelected {
     background-color: #E1E8ED;
+}
+
+/*-------------------------------- Print Instructions --------------------------------*/
+.printInstructionsContent {
+    background: none repeat scroll 0 0 #FFFFFF;
+    padding: 20px;
+    border-radius: 20px;
+    margin: 0 auto;
+    width: 90%;
+    line-height: 25px;
+}
+
+.printInstructionsContent .projectTweetFormat {
+    text-align: center;
+    padding: 10px
+}
+
+.printInstructionsContent .colTitle {
+    padding-right: 5px;
+    color: #0e466d;
+    font-weight: bold;
+}
+
+.printInstructionsContent .note {
+    font-weight: bold;
 }
