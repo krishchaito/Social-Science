@@ -33,16 +33,16 @@
                                 <span class="colTitle">Tag: </span> <?php echo $project->getHashTag(); ?>
                             </div>
                             <div class="projectLastUpdate">
-                                <span class="colTitle">Last Update: </span> NA
+                                <span class="colTitle">Last Updated On: </span> <?php echo $this->lastUpdatedOn[$project->getId()] ?>
                             </div>
                         </div>
 
                         <div class="projectDataCol fleft">
                             <div class="projectTweets">
-                                <span class="colTitle">No: of Tweets: </span> 0
+                                <span class="colTitle">No: of Tweets: </span> <?php echo $project->getNumOfTweets() ?>
                             </div>
                             <div class="projectInstagramPosts">
-                                <span class="colTitle">No: of Instagram Posts: </span> 0
+                                <span class="colTitle">No: of Instagram Posts: </span> <?php echo $project->getNumOfPosts() ?>
                             </div>
                         </div>
 

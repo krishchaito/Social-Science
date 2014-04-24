@@ -9,12 +9,16 @@
  */
 class Tm_Instagram
 {
-    protected $projectId = 0;
     protected $maxSimultaneousRequests = 3;
     protected $totalResultsCount = 0;
     protected $savedResultsCount = 0;
     protected $sinceId = 0;
     protected $lastPostCreatedAt;
+    
+    /**
+     * @var Object Application_Model_Projects
+     */
+    protected $project = '';
 
     protected $apiUrl = 'https://api.instagram.com/v1';
     protected $clientId = '98766d2483ef46c79bf4a51f4044c5cf';
@@ -31,25 +35,26 @@ class Tm_Instagram
 
     }
 
-    public function update($projectId, $hashTag)
+    public function update(Application_Model_Projects &$project)
     {
+        $this->project = $project;
+
         for($requestNo = 0; $requestNo < $this->maxSimultaneousRequests; $requestNo++) {
             if((empty($this->totalResultsCount) && $requestNo < 1) || ($this->totalResultsCount == 20)) {
-                $this->updatePosts($projectId, $hashTag);
+                $this->updatePosts();
             }
         }
     }
 
-    public function updatePosts($projectId, $hashTag)
+    public function updatePosts()
     {
         $postsMetaMapper = new Application_Model_PostsMetaMapper();
-        $minIdStr = $postsMetaMapper->fetchByMetaKeyDesc(Tm_Constants::INSTAGRAMMINIDSTR_METAKEY, $this->projectId);
+        $minIdStr = $postsMetaMapper->fetchByMetaKeyDesc(Tm_Constants::INSTAGRAMMINIDSTR_METAKEY, $this->project->getId());
 
         $this->lastPostCreatedAt = 0;
         $this->savedResultsCount = 0;
-        $this->projectId = $projectId;
 
-        $tag = substr($hashTag, 1);
+        $tag = substr($this->project->getHashTag(), 1);
         $searchUri = '/tags/'.$tag.'/media/recent';
         $params = array('client_id' => $this->clientId);
         if(is_object($minIdStr)) {
@@ -82,7 +87,15 @@ class Tm_Instagram
 
             $this->totalResultsCount = count($results->data);
             $this->saveMetaData($results->pagination);
+            $this->saveProject();
         }
+    }
+
+    protected function saveProject()
+    {
+        $numOfPosts = $this->project->getNumOfPosts() + $this->savedResultsCount;
+        $this->project->setNumOfPosts($numOfPosts);
+        $this->project->save();
     }
 
     public function savePost($post)
@@ -92,7 +105,7 @@ class Tm_Instagram
         $userId = $explodedData[1];
 
         $postDb = new Application_Model_Posts();
-        $postDb->setProjectId($this->projectId);
+        $postDb->setProjectId($this->project->getId());
         $postDb->setPostIdStr($postId);
         $postDb->setText($this->gettext($post));
         $postDb->setUserIdStr($userId);
@@ -121,34 +134,34 @@ class Tm_Instagram
     protected function saveMetaData($metaData)
     {
         $postsMeta = new Application_Model_PostsMeta();
-        $postsMeta->setProjectId($this->projectId);
+        $postsMeta->setProjectId($this->project->getId());
         $postsMeta->setMetaKey(Tm_Constants::lASTUPDATEDON_METAKEY);
         $postsMeta->setMetaValue(date(Tm_Constants::MySqlDateTime));
         $postsMeta->save();
 
         if(isset($metaData->min_tag_id)) {
             $postsMeta1 = new Application_Model_PostsMeta();
-            $postsMeta1->setProjectId($this->projectId);
+            $postsMeta1->setProjectId($this->project->getId());
             $postsMeta1->setMetaKey(Tm_Constants::INSTAGRAMMINIDSTR_METAKEY);
             $postsMeta1->setMetaValue($metaData->min_tag_id);
             $postsMeta1->save();
         }
 
         $postsMeta2 = new Application_Model_PostsMeta();
-        $postsMeta2->setProjectId($this->projectId);
+        $postsMeta2->setProjectId($this->project->getId());
         $postsMeta2->setMetaKey(Tm_Constants::INSTAGRAMTOTALRESULTSCOUNT_METAKEY);
         $postsMeta2->setMetaValue($this->totalResultsCount);
         $postsMeta2->save();
 
         $postsMeta3 = new Application_Model_PostsMeta();
-        $postsMeta3->setProjectId($this->projectId);
+        $postsMeta3->setProjectId($this->project->getId());
         $postsMeta3->setMetaKey(Tm_Constants::INSTAGRAMSAVEDRESULTSCOUNT_METAKEY);
         $postsMeta3->setMetaValue($this->savedResultsCount);
         $postsMeta3->save();
 
         if(!empty($this->lastPostCreatedAt)) {
             $postsMeta4 = new Application_Model_PostsMeta();
-            $postsMeta4->setProjectId($this->projectId);
+            $postsMeta4->setProjectId($this->project->getId());
             $postsMeta4->setMetaKey(Tm_Constants::INSTAGRAMLASTPOSTCREATEDAT_METAKEY);
             $postsMeta4->setMetaValue($this->lastPostCreatedAt);
             $postsMeta4->save();
@@ -204,7 +217,7 @@ class Tm_Instagram
     protected function saveCommunicationToLog($response, $url, $status = 200)
     {
         $dataLog = new Application_Model_DataLog();
-        $dataLog->setProjectId($this->projectId);
+        $dataLog->setProjectId($this->project->getId());
         $dataLog->setDescription('Fetching posts from Instagram');
         $dataLog->setTransport('GET');
         $dataLog->setOrigin('Us');

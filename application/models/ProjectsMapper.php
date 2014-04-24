@@ -31,6 +31,8 @@ class Application_Model_ProjectsMapper extends Application_Model_DbMapper
             'gpsReq' => $projects->getGpsReq(),
             'status' => $projects->getStatus(),
             'trackData' => $projects->getTrackData(),
+            'numOfTweets' => $projects->getNumOfTweets(),
+            'numOfPosts' => $projects->getNumOfPosts(),
             'tweetFormat' => $projects->getTweetFormat(),
             'createdDateTime' => date(Tm_Constants::MySqlDateTime)
         );

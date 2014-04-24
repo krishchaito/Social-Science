@@ -17,6 +17,8 @@ class Application_Model_Projects extends Application_Model_Db
     protected $_gpsReq = 0;
     protected $_tweetFormat = '';
     protected $_trackData = '';
+    protected $_numOfTweets = 0;
+    protected $_numOfPosts = 0;
     protected $_status = 'Active';
     protected $_createdDateTime = '0000-00-00 00:00:00';
     protected $_tsLastUpdated = '';
@@ -281,6 +283,40 @@ class Application_Model_Projects extends Application_Model_Db
     public function getTrackData()
     {
         return $this->_trackData;
+    }
+
+    /**
+     * @param int $numOfPosts
+     */
+    public function setNumOfPosts($numOfPosts)
+    {
+        $this->_numOfPosts = $numOfPosts;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumOfPosts()
+    {
+        return $this->_numOfPosts;
+    }
+
+    /**
+     * @param int $numOfTweets
+     */
+    public function setNumOfTweets($numOfTweets)
+    {
+        $this->_numOfTweets = $numOfTweets;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumOfTweets()
+    {
+        return $this->_numOfTweets;
     }
 
     public function save()

@@ -186,12 +186,12 @@ class ProjectController extends Zend_Controller_Action
 
         if($project->getUseTwitter()) {
             $twitter = new Tm_Twitter();
-            $twitter->update($project->getId(), $project->getHashTag());
+            $twitter->update($project);
         }
 
         if($project->getUseInstagram()) {
             $twitter = new Tm_Instagram();
-            $twitter->update($project->getId(), $project->getHashTag());
+            $twitter->update($project);
         }
 
         $data = array('status' => 'success', 'statusCode' => 200);

@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS `projects` (
     `gpsReq` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1-TRUE, 0-FALSE',
     `tweetFormat` VARCHAR(100) NOT NULL,
     `trackData` text NOT NULL,
+    `numOfTweets` int(11) NOT NULL DEFAULT 0 COMMENT 'Number of tweets',
+    `numOfPosts` int(11) NOT NULL DEFAULT 0 COMMENT 'Number of posts',
     `status` enum('Active','Closed') NOT NULL DEFAULT 'Active',
     `createdDateTime` datetime DEFAULT '0000-00-00 00:00:00',
     `tsLastUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -26,13 +26,17 @@ class Tm_Twitter
      */
     protected $accessTokenSecret = 'bKOSzvZnVmXGJqQc3AeAjYxJSUB6U2bI1dYJO0ZSzJsoZ';
     protected $tweetMaxCount = 100;
-    protected $projectId = 0;
     protected $searchTweetsUrl = 'search/tweets';
     protected $totalResultsCount = 0;
     protected $savedResultsCount = 0;
     protected $sinceId = 0;
     protected $lastTweetCreatedAt;
     protected $maxSimultaneousRequests = 3;
+
+    /**
+     * @var Object Application_Model_Projects
+     */
+    protected $project = '';
 
     /**
      * Construct Tm_Twitter object
@@ -42,21 +46,21 @@ class Tm_Twitter
 
     }
 
-    public function update($projectId, $hashTag)
+    public function update(Application_Model_Projects &$project)
     {
+        $this->project = $project;
+
         for($requestNo = 0; $requestNo < $this->maxSimultaneousRequests; $requestNo++) {
             if((empty($this->totalResultsCount) && $requestNo < 1) || ($this->totalResultsCount == 100)) {
-                $this->updateTweets($projectId, $hashTag);
+                $this->updateTweets();
             }
         }
     }
 
-    protected function updateTweets($projectId, $hashTag)
+    protected function updateTweets()
     {
-        $this->projectId = $projectId;
-
         $postsMetaMapper = new Application_Model_PostsMetaMapper();
-        $maxIdStr = $postsMetaMapper->fetchByMetaKeyDesc(Tm_Constants::TWITTERMAXIDSTR_METAKEY, $this->projectId);
+        $maxIdStr = $postsMetaMapper->fetchByMetaKeyDesc(Tm_Constants::TWITTERMAXIDSTR_METAKEY, $this->project->getId());
 
         if(is_object($maxIdStr)) {
             $this->sinceId = $maxIdStr->getMetaValue();
@@ -65,7 +69,7 @@ class Tm_Twitter
         $this->lastTweetCreatedAt = 0;
         $this->savedResultsCount = 0;
 
-        $results = $this->requestTwitterApi($hashTag);
+        $results = $this->requestTwitterApi($this->project->getHashTag());
 
         // Save communication to dataLog
         $this->saveCommunicationToLog($results);
@@ -90,12 +94,20 @@ class Tm_Twitter
         }
         $this->totalResultsCount = count($results->statuses);
         $this->saveMetaData($results->search_metadata);
+        $this->saveProject();
+    }
+
+    protected function saveProject()
+    {
+        $numOfTweets = $this->project->getNumOfTweets() + $this->savedResultsCount;
+        $this->project->setNumOfTweets($numOfTweets);
+        $this->project->save();
     }
 
     protected function saveTweet($tweet)
     {
         $postDb = new Application_Model_Posts();
-        $postDb->setProjectId($this->projectId);
+        $postDb->setProjectId($this->project->getId());
         $postDb->setPostIdStr($tweet->id_str);
         $postDb->setText($tweet->text);
         $postDb->setUserIdStr($tweet->user->id_str);
@@ -121,32 +133,32 @@ class Tm_Twitter
     protected function saveMetaData($metaData)
     {
         $postsMeta = new Application_Model_PostsMeta();
-        $postsMeta->setProjectId($this->projectId);
+        $postsMeta->setProjectId($this->project->getId());
         $postsMeta->setMetaKey(Tm_Constants::lASTUPDATEDON_METAKEY);
         $postsMeta->setMetaValue(date(Tm_Constants::MySqlDateTime));
         $postsMeta->save();
 
         $postsMeta1 = new Application_Model_PostsMeta();
-        $postsMeta1->setProjectId($this->projectId);
+        $postsMeta1->setProjectId($this->project->getId());
         $postsMeta1->setMetaKey(Tm_Constants::TWITTERMAXIDSTR_METAKEY);
         $postsMeta1->setMetaValue($metaData->max_id_str);
         $postsMeta1->save();
 
         $postsMeta2 = new Application_Model_PostsMeta();
-        $postsMeta2->setProjectId($this->projectId);
+        $postsMeta2->setProjectId($this->project->getId());
         $postsMeta2->setMetaKey(Tm_Constants::TWITTERTOTALRESULTSCOUNT_METAKEY);
         $postsMeta2->setMetaValue($this->totalResultsCount);
         $postsMeta2->save();
 
         $postsMeta3 = new Application_Model_PostsMeta();
-        $postsMeta3->setProjectId($this->projectId);
+        $postsMeta3->setProjectId($this->project->getId());
         $postsMeta3->setMetaKey(Tm_Constants::TWITTERSAVEDRESULTSCOUNT_METAKEY);
         $postsMeta3->setMetaValue($this->savedResultsCount);
         $postsMeta3->save();
 
         if(!empty($this->lastTweetCreatedAt)) {
             $postsMeta4 = new Application_Model_PostsMeta();
-            $postsMeta4->setProjectId($this->projectId);
+            $postsMeta4->setProjectId($this->project->getId());
             $postsMeta4->setMetaKey(Tm_Constants::TWITTERLASTTWEETCREATEDAT_METAKEY);
             $postsMeta4->setMetaValue($this->lastTweetCreatedAt);
             $postsMeta4->save();
@@ -207,7 +219,7 @@ class Tm_Twitter
     protected function saveCommunicationToLog($response, $status = 200)
     {
         $dataLog = new Application_Model_DataLog();
-        $dataLog->setProjectId($this->projectId);
+        $dataLog->setProjectId($this->project->getId());
         $dataLog->setDescription('Fetching tweets from Twitter');
         $dataLog->setTransport('OAuth');
         $dataLog->setOrigin('Us');
