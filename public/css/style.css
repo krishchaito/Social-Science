@@ -20,7 +20,6 @@ body {
     background: #2E2E2E;
     margin: 0 auto;
     padding: 0;
-    position: fixed;
     top: 0;
     z-index: 999;
 }
@@ -78,16 +77,13 @@ nav li a:hover, nav li a.active {
     color: #FFF;
     border-bottom: 3px solid #FF0000;
     background: #484848;
-    text-shadow: 0 1px rgba(0,0,0,0.5);
 }
 
 /*-------------------------------- Body Container --------------------------------*/
 .mainContainer {
     max-width: 100%;
     min-width: 1000px;
-    margin: 0 auto;
-    margin-top: 63px;
-    position: relative;
+    margin: 10px auto 0;
     zoom: 1;
     padding: 15px 30px;
     min-height: 700px;
