@@ -1,3 +1,4 @@
+// Opens a new popup window to show print content
 function printContent(contentId) {
     var content = $('#'+contentId);
     if(content.length) {
@@ -8,9 +9,19 @@ function printContent(contentId) {
             printWindow.document.close();
             printWindow.focus();
 
-            setTimeout(function(){if(printWindow.print()) {
-                printWindow.close();
+            setTimeout(function() {
+                if(printWindow.print()) {
+                    printWindow.close();
             }},3000);
         }
     }
+}
+
+// Takes UTC DateTime and returns localized DateTime
+function getLocalizedTime(dateTimeStr) {
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var date = new Date(dateTimeStr + ' UTC');
+    var localizedDateTimeStr = months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear() + ' ' + date.toLocaleTimeString();
+    return localizedDateTimeStr;
 }

@@ -1,0 +1,20 @@
+{
+    "production": {
+        "consumerKey" : "5mKBk6c6w4mqpbnHZCcByw",
+        "consumerSecret" : "ffhuHwM4fwTUe6nV6cqbOYUenQd34CvGZ0wtr12SA",
+        "accessToken" : "",
+        "accessTokenSecret" : ""
+    },
+
+    "staging":{
+        "_extends": "production"
+    },
+
+    "testing":{
+        "_extends": "production"
+    },
+
+    "development":{
+        "_extends": "production"
+    }
+}
