@@ -74,7 +74,7 @@ class Tm_Twitter
                 if(!isset($tweet->retweeted_status)) {
                     // Check if we already have this tweet
                     $post = new Application_Model_PostsMapper();
-                    $result = $post->fetchByPostIdStr($tweet->id_str);
+                    $result = $post->fetchByPostIdStrAndProjectId($tweet->id_str, $this->project->getId());
 
                     if(!is_object($result)) {
                         // Save tweet

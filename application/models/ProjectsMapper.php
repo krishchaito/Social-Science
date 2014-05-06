@@ -67,7 +67,7 @@ class Application_Model_ProjectsMapper extends Application_Model_DbMapper
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
-            return;
+            return false;
         }
 
         $row = $result->current();

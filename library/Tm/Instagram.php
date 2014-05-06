@@ -73,7 +73,7 @@ class Tm_Instagram
                 // Check if we already have this post
                 $postsMapper = new Application_Model_PostsMapper();
                 $explodedData = explode("_", $post->id);
-                $result = $postsMapper->fetchByPostIdStr($explodedData[0]);
+                $result = $postsMapper->fetchByPostIdStrAndProjectId($explodedData[0], $this->project->getId());
 
                 if(!is_object($result)) {
                     $this->savePost($post);

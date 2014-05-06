@@ -79,9 +79,9 @@ class Application_Model_PostsMapper extends Application_Model_DbMapper
      * @param $id
      * @return Application_Model_Posts
      */
-    public function fetchByPostIdStr($postIdStr)
+    public function fetchByPostIdStrAndProjectId($postIdStr, $projectId)
     {
-        $result = $this->getDbTable()->fetchRow($this->getDbTable()->select()->where('postIdStr = ?', $postIdStr));
+        $result = $this->getDbTable()->fetchRow($this->getDbTable()->select()->where('postIdStr = ?', $postIdStr)->where('projectId = ?', $projectId));
         if (0 == count($result)) {
             return;
         }
