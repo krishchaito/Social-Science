@@ -109,10 +109,11 @@
         function initialize() {
             var map_canvas = document.getElementById('resultsMapCanvas');
 
-            var myLatlng = new google.maps.LatLng(44.31379623528233, -1.5516471862792969);
+            var myLatlng = new google.maps.LatLng(42.3493337, 13.398172299999942);
             var map_options = {
                 center: myLatlng,
-                zoom: 2
+                zoom: 2,
+                minZoom: 2
             }
             googleMap = new google.maps.Map(map_canvas, map_options);
         }
