@@ -1,3 +1,22 @@
+var googleMap;
+var marker;
+
+$(document).ready(function() {
+    // Start nice scroll on HTML element
+    $("html").niceScroll({cursorcolor:"#0070AF"});
+
+    // Adjust scroll when window resizes.
+    $(window).resize(function() {
+        $("html").getNiceScroll().resize();
+    });
+
+    // Show/Stop loader on/after ajax request
+    $(document).on({
+        ajaxStart: function() { $("#loading").show()},
+        ajaxStop: function() { $("#loading").hide()}
+    });
+});
+
 // Opens a new popup window to show print content
 function printContent(contentId) {
     var content = $('#'+contentId);
@@ -24,4 +43,14 @@ function getLocalizedTime(dateTimeStr) {
     var date = new Date(dateTimeStr + ' UTC');
     var localizedDateTimeStr = months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear() + ' ' + date.toLocaleTimeString();
     return localizedDateTimeStr;
+}
+
+function placeMarkerOnMap(latlong, message) {
+    marker = new google.maps.Marker({
+        position: latlong,
+        map: googleMap,
+        title: message
+    });
+
+    return marker;
 }

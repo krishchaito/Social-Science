@@ -64,6 +64,7 @@ class ProjectController extends Zend_Controller_Action
 
         $this->view->hasError = $hasError;
         $this->view->errors = $errors;
+        $this->view->title = 'New Project';
     }
 
     /**
@@ -90,7 +91,7 @@ class ProjectController extends Zend_Controller_Action
 //            $trackValueStr .= ' '.$value;
 //        }
 
-        $this->view->id = $id;
+        $this->view->id = $project->getId();
         $this->view->domainUrl = Tm_Project::getDomainUrl();
         $this->view->project = $project;
     }
@@ -110,7 +111,7 @@ class ProjectController extends Zend_Controller_Action
         $project = Tm_Project::getById($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
-        $this->view->id = $id;
+        $this->view->id = $project->getId();
         $this->view->project = $project;
         $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
     }
@@ -120,19 +121,18 @@ class ProjectController extends Zend_Controller_Action
      */
     public function resultsAction()
     {
-        $request = $this->getRequest();
-        $data = $request->getParams();
+        $params = $this->getRequest()->getParams();
 
         // Redirect to projects list if we do not have project id
-        if(!isset($data['id'])) {
+        if(!isset($params['id'])) {
             $this->redirect('/projects');
         }
-        $id = $data['id'];
+        $id = $params['id'];
         $project = Tm_Project::getById($id);
         $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
-        $this->view->id = $id;
+        $this->view->id = $project->getId();
         $this->view->project = $project;
         $this->view->posts = $posts;
         $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
@@ -143,19 +143,18 @@ class ProjectController extends Zend_Controller_Action
      */
     public function mapAction()
     {
-        $request = $this->getRequest();
-        $data = $request->getParams();
+        $params = $this->getRequest()->getParams();
 
         // Redirect to projects list if we do not have project id
-        if(!isset($data['id'])) {
+        if(!isset($params['id'])) {
             $this->redirect('/projects');
         }
-        $id = $data['id'];
+        $id = $params['id'];
         $project = Tm_Project::getById($id);
         $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
-        $this->view->id = $id;
+        $this->view->id = $project->getId();
         $this->view->project = $project;
         $this->view->posts = $posts;
         $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
@@ -166,20 +165,19 @@ class ProjectController extends Zend_Controller_Action
      */
     public function refreshAction()
     {
-        $request = $this->getRequest();
-        $data = $request->getParams();
+        $params = $this->getRequest()->getParams();
 
         // Return error if we do not have project id
-        if(!isset($data['id'])) {
-            $data = array('status' => 'failed', 'statusCode' => 404);
-            echo $this->_helper->json($data);
+        if(!isset($params['id'])) {
+            $response = array('status' => 'failed', 'statusCode' => 404);
+            echo $this->_helper->json($response);
         }
-        $id = $data['id'];
+        $id = $params['id'];
         $project = Tm_Project::getById($id);
 
         if(!is_object($project)) {
-            $data = array('status' => 'failed', 'statusCode' => 500);
-            echo $this->_helper->json($data);
+            $response = array('status' => 'failed', 'statusCode' => 500);
+            echo $this->_helper->json($response);
         }
 
         if($project->getUseTwitter()) {
@@ -192,8 +190,8 @@ class ProjectController extends Zend_Controller_Action
             $twitter->update($project);
         }
 
-        $data = array('status' => 'success', 'statusCode' => 200);
-        echo $this->_helper->json($data);
+        $response = array('status' => 'success', 'statusCode' => 200);
+        echo $this->_helper->json($response);
     }
 
 }

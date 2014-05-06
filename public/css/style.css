@@ -482,3 +482,13 @@ nav li a:hover, nav li a.active {
 .printInstructionsContent .note {
     font-weight: bold;
 }
+
+/*-------------------------------- Styles to show content on Map --------------------------------*/
+.onMapTitle {
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.onMapContent {
+    width: 420px;
+}

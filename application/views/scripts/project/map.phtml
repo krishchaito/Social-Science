@@ -2,6 +2,24 @@
     <?php echo $this->render('/project/projectlayout.phtml'); ?>
 
         <!-- Results Map -->
+        <div class="" style="display: none;">
+            <?php foreach($this->posts as $post) {
+                $latitude = $post->getCoordinatesLatitude();
+                $longitude = $post->getCoordinatesLongitude();
+
+                if(!empty($longitude) && !empty($latitude)) {
+            ?>
+                    <div class="resultsDetails">
+                        <input type="hidden" value="<?php echo $post->getId() ?>" id="postId" />
+                        <input type="hidden" value="<?php echo $post->getImageURL() ?>" class="imageUrl" />
+                        <input type="hidden" value="<?php echo $post->getCoordinatesLongitude() ?>" class="longitude" />
+                        <input type="hidden" value="<?php echo $post->getCoordinatesLatitude() ?>" class="latitude" />
+                        <div class="tweetMessage"><?php echo $post->getText() ?></div>
+                    </div>
+                <?php }
+            } ?>
+        </div>
+
         <div class="projectBodyContent projectMapContent">
             <div id="mapCanvas" class="projectMapCanvas">
 
@@ -12,28 +30,32 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script type="text/javascript">
-    var googleMap;
-    var marker;
-    var coordinates = new Array();
-
     $(document).ready(function() {
         // Add active class for Dashboard menu
         $('.projectsListNav li:nth-child(3)').addClass('activeMenu');
-    });
 
-    $('.projectMapCanvas').click(function() {
-        var s = 9;
-        var t = 0;
-    });
+        $(".resultsDetails").each(function(index, ele) {
+            var latitude = $(ele).children('input.latitude').val();
+            var longitude = $(ele).children('input.longitude').val();
+            var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(ele).children('div.tweetMessage').html() + '</div>';
+            var imageUrl = $(ele).children('input.imageUrl').val();
+            if(imageUrl) {
+                messageOnMap += '<img src="'+ imageUrl +'" width="400px" height="350px" />';
+            }
+            messageOnMap += '</div>';
 
-    function placeMarker(latlong, title) {
-        var marker = new google.maps.Marker({
-            position: latlong,
-            map: googleMap
-            //title: title
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(latitude, longitude),
+                map: googleMap,
+                html: messageOnMap
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(this.html);
+                infowindow.open(googleMap, this);
+            });
         });
-        //marker.setMap(googleMap);
-    }
+    });
 
     <?php if(!empty($this->posts)) { ?>
         function initialize() {
@@ -41,29 +63,19 @@
             var myLatlng = new google.maps.LatLng(44.31379623528233, -1.5516471862792969);
             var map_options = {
                 center: myLatlng,
-                zoom: 3
+                zoom: 3,
+                minZoom: 3
             }
             googleMap = new google.maps.Map(mapCanvas, map_options);
+
+            infowindow = new google.maps.InfoWindow({
+                content: "loading..."
+            });
         }
 
         // Initialize google maps before we place markers.
         initialize();
-
-        <?php
-            $count = 0;
-            foreach($this->posts as $post) {
-                $latitude = $post->getCoordinatesLatitude();
-                $longitude = $post->getCoordinatesLongitude();
-
-                if(!empty($longitude) && !empty($latitude)) { ?>
-                    placeMarker(new google.maps.LatLng(<?php echo $latitude ?>, <?php echo $longitude ?>));
-            <?php
-                    $count++;
-                }
-            }
-        } else { ?>
-            $('#mapCanvas').html('Tweets/Posts are not available at this time.');
-        <?php } ?>
-
-        //google.maps.event.addDomListener(window, 'load', initialize);
+    <?php } else { ?>
+        $('#mapCanvas').html('Tweets/Posts are not available at this time.');
+    <?php } ?>
 </script>

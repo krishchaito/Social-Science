@@ -22,9 +22,7 @@
                                         <div class="tweetUsername fleft"> @<?php echo $post->getUserScreenName() ?>  </div>
                                         <div class="tweetTime fleft"> <?php echo $post->getPostCreatedAt() ?> </div>
                                     </div>
-                                    <div class="tweetMessage">
-                                        <?php echo $post->getText() ?>
-                                    </div>
+                                    <div class="tweetMessage"><?php echo $post->getText() ?></div>
                                     <?php $place = $post->getPlace();
                                     if(!empty($place)) { ?>
 
@@ -34,6 +32,8 @@
 
                                     <?php } ?>
 
+                                    <input type="hidden" value="<?php echo $post->getId() ?>" id="postId" />
+                                    <input type="hidden" value="<?php echo $post->getImageURL() ?>" class="imageUrl" />
                                     <input type="hidden" value="<?php echo $post->getCoordinatesLongitude() ?>" class="longitude" />
                                     <input type="hidden" value="<?php echo $post->getCoordinatesLatitude() ?>" class="latitude" />
                                 </div>
@@ -59,11 +59,8 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
-    var googleMap;
-    var marker;
-
     $(document).ready(function() {
-        $('#tweetsList').niceScroll({cursorcolor:"#0070AF"});
+        $('#tweetsList').niceScroll({cursorcolor:"#0070AF", autohidemode:false});
 
         // Add active class for Results menu
         $('.projectsListNav li:nth-child(2)').addClass('activeMenu');
@@ -86,16 +83,24 @@
                 alert('Location details are not available for this message.');
             } else {
                 // Show marker on map
-                var myLatlng = new google.maps.LatLng(latitude, longitude);
-                marker = new google.maps.Marker({
-                    position: myLatlng,
-                    //animation:google.maps.Animation.BOUNCE,
-                    map: googleMap
-                });
+                var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(this).children('div.tweetMessage').html() + '</div>';
+                var imageUrl = $(this).children('input.imageUrl').val();
+                if(imageUrl) {
+                    messageOnMap += '<img src="'+ imageUrl +'" width="400px" height="350px" />';
+                }
+                messageOnMap += '</div>';
+
+                var placedMarker = placeMarkerOnMap(new google.maps.LatLng(latitude, longitude));
 
                 // Set zoom level and center the map.
                 googleMap.setZoom(10);
-                googleMap.setCenter(marker.getPosition());
+                googleMap.setCenter(placedMarker.getPosition());
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: messageOnMap
+                });
+
+                google.maps.event.addListener(placedMarker, 'click', function() {infowindow.open(googleMap, placedMarker);});
             }
         });
     });

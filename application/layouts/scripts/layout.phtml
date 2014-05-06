@@ -14,23 +14,6 @@
     <!-- Load Javascript Libs -->
     <?php echo $this->headScript(); ?>
 
-    <!-- Start NiceScroll -->
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("html").niceScroll({cursorcolor:"#0070AF"});
-
-            // Adjust scroll when window resizes.
-            $(window).resize(function() {
-                $("html").getNiceScroll().resize();
-            });
-
-            $(document).on({
-                ajaxStart: function() { $("#loading").show()},
-                ajaxStop: function() { $("#loading").hide()}
-            });
-        });
-    </script>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
