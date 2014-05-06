@@ -33,28 +33,6 @@
     $(document).ready(function() {
         // Add active class for Dashboard menu
         $('.projectsListNav li:nth-child(3)').addClass('activeMenu');
-
-        $(".resultsDetails").each(function(index, ele) {
-            var latitude = $(ele).children('input.latitude').val();
-            var longitude = $(ele).children('input.longitude').val();
-            var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(ele).children('div.tweetMessage').html() + '</div>';
-            var imageUrl = $(ele).children('input.imageUrl').val();
-            if(imageUrl) {
-                messageOnMap += '<img src="'+ imageUrl +'" width="400px" height="350px" />';
-            }
-            messageOnMap += '</div>';
-
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(latitude, longitude),
-                map: googleMap,
-                html: messageOnMap
-            });
-
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(this.html);
-                infowindow.open(googleMap, this);
-            });
-        });
     });
 
     <?php if(!empty($this->posts)) { ?>
@@ -70,6 +48,28 @@
 
             infowindow = new google.maps.InfoWindow({
                 content: "loading..."
+            });
+
+            $(".resultsDetails").each(function(index, ele) {
+                var latitude = $(ele).children('input.latitude').val();
+                var longitude = $(ele).children('input.longitude').val();
+                var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(ele).children('div.tweetMessage').html() + '</div>';
+                var imageUrl = $(ele).children('input.imageUrl').val();
+                if(imageUrl) {
+                    messageOnMap += '<img src="'+ imageUrl +'" width="400px" height="350px" />';
+                }
+                messageOnMap += '</div>';
+
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(latitude, longitude),
+                    map: googleMap,
+                    html: messageOnMap
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(this.html);
+                    infowindow.open(googleMap, this);
+                });
             });
         }
 
