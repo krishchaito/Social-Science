@@ -29,6 +29,7 @@
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="/js/overlappingmarkerspiderfier.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         // Add active class for Dashboard menu
@@ -38,18 +39,44 @@
     <?php if(!empty($this->posts)) { ?>
         function initialize() {
             var mapCanvas = document.getElementById('mapCanvas');
-            var myLatlng = new google.maps.LatLng(42.3493337, 13.398172299999942);
-            var map_options = {
-                center: myLatlng,
+            googleMap = new google.maps.Map(mapCanvas, {
+                center: new google.maps.LatLng(42.3493337, 13.398172299999942),
                 zoom: 3,
                 minZoom: 3
-            }
-            googleMap = new google.maps.Map(mapCanvas, map_options);
+            });
 
             infowindow = new google.maps.InfoWindow({
                 content: "loading..."
             });
 
+            var oms = new OverlappingMarkerSpiderfier(googleMap, {markersWontMove: true, markersWontHide: true});
+
+            var iconWithColor = function(color) {
+                return 'http://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|+|' + color + '|000000|ffff00';
+            }
+
+            // Click event to show info window
+            oms.addListener('click', function(marker) {
+                infowindow.setContent(marker.html);
+                infowindow.open(googleMap, marker);
+            });
+
+            // Add spiderfy listener
+            oms.addListener('spiderfy', function(markers) {
+                for(var i = 0; i < markers.length; i ++) {
+                    markers[i].setIcon(iconWithColor('ffee22'));
+                }
+                infowindow.close();
+            });
+
+            // Add spiderfy listener
+            oms.addListener('unspiderfy', function(markers) {
+                for(var i = 0; i < markers.length; i ++) {
+                    markers[i].setIcon(null);
+                }
+            });
+
+            // Place markers with their content
             $(".resultsDetails").each(function(index, ele) {
                 var latitude = $(ele).children('input.latitude').val();
                 var longitude = $(ele).children('input.longitude').val();
@@ -65,11 +92,7 @@
                     map: googleMap,
                     html: messageOnMap
                 });
-
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow.setContent(this.html);
-                    infowindow.open(googleMap, this);
-                });
+                oms.addMarker(marker);
             });
         }
 

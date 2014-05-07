@@ -3,7 +3,7 @@ var marker;
 
 $(document).ready(function() {
     // Start nice scroll on HTML element
-    $("html").niceScroll({cursorcolor:"#0070AF"});
+    $("html").niceScroll({cursorcolor:"#0070AF", autohidemode:false});
 
     // Adjust scroll when window resizes.
     $(window).resize(function() {
