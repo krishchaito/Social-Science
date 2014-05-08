@@ -19,6 +19,12 @@ class Tm_Project
         return $projectsMapper->fetchByID($projectId);
     }
 
+    static public function getAllProjects()
+    {
+        $projectsMapper = new Application_Model_ProjectsMapper();
+        return $projectsMapper->fetchAll();
+    }
+
     static public function getPostsByProjectIdWithPostCreatedAtDesc($projectId)
     {
         $postsMapper = new Application_Model_PostsMapper();
