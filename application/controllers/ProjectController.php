@@ -128,8 +128,29 @@ class ProjectController extends Zend_Controller_Action
             $this->redirect('/projects');
         }
         $id = $params['id'];
+
+        if(!empty($params['search']) && ($params['search'] == 'Search')) {
+            // Calculate Start Date.
+            $startDate = '';
+            if(!empty($params['st_date'])) {
+                $startDate = date(Tm_Constants::MySqlDateTime, strtotime($params['st_date']));
+            }
+
+            // Calculate End Date. Default to today.
+            if(empty($params['end_date'])) {
+                $date = date("Y-m-d");
+            } else {
+                $date = date("Y-m-d", strtotime($params['end_date']));
+            }
+            $explodedDate = explode('-', $date);
+            $endDate = date(Tm_Constants::MySqlDateTime, mktime(23, 59, 59, $explodedDate[1], $explodedDate[2], $explodedDate[0]));
+
+            $posts = Tm_Project::getPostsByProjectIdWithSearchString($id, $startDate, $endDate);
+        } else {
+            $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
+        }
+
         $project = Tm_Project::getById($id);
-        $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
         $this->view->id = $project->getId();

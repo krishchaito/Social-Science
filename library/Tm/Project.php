@@ -31,6 +31,12 @@ class Tm_Project
         return $postsMapper->fetchAllByProjectIDWithPostCreatedAtDesc($projectId);
     }
 
+    static public function getPostsByProjectIdWithSearchString($projectId, $startDate, $endDate)
+    {
+        $postsMapper = new Application_Model_PostsMapper();
+        return $postsMapper->fetchAllByProjectIDBetweenDates($projectId, $startDate, $endDate);
+    }
+
     static public function getPostsByMetaKeyDesc($metaKey, $projectId)
     {
         $postsMapper = new Application_Model_PostsMetaMapper();

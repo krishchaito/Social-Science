@@ -158,12 +158,12 @@ nav li a:hover, nav li a.active {
     padding: 15px 0px;
 }
 
-.navButtonGroup:before,.navButtonGroup:after,.actionTabGroup:before,.actionTabGroup:after {
+.navButtonGroup:before, .navButtonGroup:after, .actionTabGroup:before, .actionTabGroup:after {
     display: table;
     content: "";
 }
 
-.navButtonGroup:after,.actionTabGroup:after {
+.navButtonGroup:after, .actionTabGroup:after {
     clear: both;
 }
 
@@ -456,6 +456,12 @@ nav li a:hover, nav li a.active {
 
 .tweetSelected {
     background-color: #E1E8ED;
+}
+
+.searchForm {
+    padding: 10px;
+    background-color: #CFCFCF;
+    border-radius: 10px;
 }
 
 /*-------------------------------- Print Instructions --------------------------------*/

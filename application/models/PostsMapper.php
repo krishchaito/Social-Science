@@ -89,5 +89,19 @@ class Application_Model_PostsMapper extends Application_Model_DbMapper
         return new Application_Model_Posts($result->toArray());
     }
 
+    public function fetchAllByProjectIDBetweenDates($projectId, $startDate, $endDate)
+    {
+        if(empty($startDate)) {
+            $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('projectId = ?', $projectId)->where('postCreatedAt < ?', $endDate)->order('postCreatedAt DESC'));
+        } else {
+            $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('projectId = ?', $projectId)->where('postCreatedAt > ?', $startDate)->where('postCreatedAt < ?', $endDate)->order('postCreatedAt DESC'));
+        }
+
+        $entries = array();
+        foreach ($resultSet as $row) {
+            $entries[] = new Application_Model_Posts($row->toArray());
+        }
+        return $entries;
+    }
 }
 

@@ -3,11 +3,26 @@
 
         <!-- Results -->
         <div class="projectBodyContent">
-            <div id="results" class="projectResults">
-                <div class="projectTweetFormat">
-                    <span class="colTitle">Tweet Format: </span> <?php echo $this->project->getTweetFormat(); ?>
+            <div class="clearfix">
+                <div class="fleft searchForm">
+                    <form action="<?php echo '/project/results/id/'.$this->id; ?>" method="get" autocomplete="off">
+                        <div class="formGrp">
+                            <label class="">Start Date</label>
+                            <input type="text" name="st_date" id="st_date" value="" />
+
+                            <label class="">End Date</label>
+                            <input type="text" name="end_date" id="end_date" value="" />
+                        </div>
+                        <input type="submit" class="fright primary mediumButton" id="searchButton" name="search" value="Search" />
+                    </form>
                 </div>
 
+                <div class="fright projectTweetFormat">
+                    <span class="colTitle">Tweet Format: </span> <?php echo $this->project->getTweetFormat(); ?>
+                </div>
+            </div>
+
+            <div id="results" class="projectResults">
                 <div class="clearfix resultsContent">
                     <?php if(!empty($this->posts)) { ?>
                         <!-- Display Tweets Here -->
@@ -64,6 +79,10 @@
 
         // Add active class for Results menu
         $('.projectsListNav li:nth-child(2)').addClass('activeMenu');
+
+        // Date Picker
+        $("#st_date").datepicker({autoSize: true, dateFormat: "M d, yy", duration: "fast", maxDate: 0, showAnim: "slideDown"});
+        $("#end_date").datepicker({autoSize: true, dateFormat: "M d, yy", duration: "fast", maxDate: 0, showAnim: "slideDown"});
 
         // On clicking show this tweet on map
         $('.tweet').click(function() {
