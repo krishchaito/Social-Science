@@ -1,7 +1,7 @@
 <div class="createEditProject">
-    <h2 class="newProject"><?php echo $this->title ?></h2>
+    <h2 class="newProject"><?php echo (empty($this->id)) ? 'New Project' : 'Edit Project'; ?></h2>
     <?php echo $this->message; ?>
-    <form action="/project/create" method="POST" autocomplete="off">
+    <form action="<?php echo (empty($this->id)) ? '/project/create' : '/project/edit/id/'.$this->id; ?>" method="POST" autocomplete="off">
 
         <?php if($this->hasError) { ?>
             <div class="errorMsg">Please input all the required fields.</div>
@@ -11,14 +11,14 @@
             <div class="clearfix formGrp">
                 <label class="inputLabel">Title <span class="required">*</span></label>
                 <div class="inputEle">
-                    <input id="title" type="text" name="title" size="50" placeholder="Enter your project title" />
+                    <input id="title" type="text" name="title" size="50" placeholder="Enter your project title" value="<?php echo ($this->title) ? $this->title : '';?>" />
                 </div>
             </div>
 
             <div class="clearfix formGrp">
                 <label class="inputLabel">Hash tag <span class="required">*</span></label>
                 <div class="inputEle">
-                    # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" />
+                    # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" value="<?php echo ($this->hashTag) ? ltrim($this->hashTag, '#') : '';?>" />
 <!--                    <button class="primary mediumButton" id="hashTagEdit">Edit</button>-->
                 </div>
             </div>
@@ -26,14 +26,14 @@
             <div class="clearfix formGrp">
                 <label class="inputLabel">Summary <span class="required">*</span></label>
                 <div class="inputEle">
-                    <input type="text" name="summary" id="summary" size="50" placeholder="Brief description of your project" />
+                    <input type="text" name="summary" id="summary" size="50" placeholder="Brief description of your project" value="<?php echo ($this->summary) ? $this->summary : '';?>" />
                 </div>
             </div>
 
             <div class="clearfix formGrp">
                 <label class="inputLabel">Description <span class="required">*</span></label>
                 <div class="inputEle">
-                    <textarea name="description" id="description" cols="75" rows="10" placeholder="Detailed description of your project"></textarea>
+                    <textarea name="description" id="description" cols="75" rows="10" placeholder="Detailed description of your project"><?php echo ($this->description) ? $this->description : '';?></textarea>
                 </div>
             </div>
 
@@ -41,14 +41,14 @@
                 <div class="sectionTitle">Which of the following services you wish to use? <span class="required">*</span></div>
                 <div class="clearfix formGrp">
                     <div class="inputLabel">
-                        <input type="checkbox" name="useTwitter" size="50" />
+                        <input type="checkbox" name="useTwitter" size="50" <?php echo ($this->useTwitter) ? 'checked' : '';?> />
                     </div>
                     <label class="inputEle">Twitter</label>
                 </div>
 
                 <div class="clearfix formGrp">
                     <div class="inputLabel">
-                        <input type="checkbox" name="useInstagram" size="50" />
+                        <input type="checkbox" name="useInstagram" size="50" <?php echo ($this->useInstagram) ? 'checked' : '';?> />
                     </div>
                     <label class="inputEle">Instagram</label>
                 </div>
@@ -56,14 +56,14 @@
 
             <div class="clearfix formGrp">
                 <div class="inputLabel">
-                    <input type="checkbox" name="usePicture" size="50" />
+                    <input type="checkbox" name="usePicture" size="50" <?php echo ($this->usePicture) ? 'checked' : '';?> />
                 </div>
                 <label class="inputEle">Attempt to use picture?</label>
             </div>
 
             <div class="clearfix formGrp">
                 <div class="inputLabel">
-                    <input type="checkbox" name="gpsReq" size="50" />
+                    <input type="checkbox" name="gpsReq" size="50" <?php echo ($this->gpsReq) ? 'checked' : '';?> />
                 </div>
                 <label class="inputEle">Is GPS Required?</label>
             </div>
@@ -71,33 +71,51 @@
             <div class="sectionGrp trackInfo">
                 <div class="sectionTitle">What do you want to track? <span class="required">*</span></div>
                 <div id="trackDiv">
-                    <div class="clearfix formGrp trackGrp">
-                        <div class="inputLabel">
-                            <input type="text" name="trackName1" id="trackName1" placeholder="Name" class="trackName" />
+                    <?php
+                    if(!empty($this->trackData)) {
+                        foreach($this->trackData as $trackName => $trackValue) {
+                    ?>
+                            <div class="clearfix formGrp trackGrp">
+                                <div class="inputLabel">
+                                    <input type="text" name="trackName[]" id="" placeholder="Name" class="trackName" value="<?php echo $trackName ?>" />
+                                </div>
+                                <div class="inputEle">
+                                    <input type="text" name="trackValue[]" size="50" id="" placeholder="Example Value" class="trackvalue" value="<?php echo $trackValue ?>" />
+                                </div>
+                            </div>
+                        <?php }
+                    } else { ?>
+                        <div class="clearfix formGrp trackGrp">
+                            <div class="inputLabel">
+                                <input type="text" name="trackName[]" id="" placeholder="Name" class="trackName" value="" />
+                            </div>
+                            <div class="inputEle">
+                                <input type="text" name="trackValue[]" size="50" id="" placeholder="Example Value" class="trackvalue" value="" />
+                            </div>
                         </div>
-                        <div class="inputEle">
-                            <input type="text" name="trackValue1" size="50" id="trackValue1" placeholder="Example Value" class="trackvalue" />
-                        </div>
-                    </div>
+                    <?php } ?>
                 </div>
 
                 <input type="button" class="primary mediumButton addMore" value="Add More" id="addMore" />
-                <input type="hidden" value="1" name="trackCounter" id="trackCounter" />
             </div>
 
             <div>
                 <div class="clearfix formGrp">
                     <label class="inputLabel">Tweet Format <span class="required">*</span></label>
                     <div class="inputEle">
-                        <input type="text" name="tweetFormat" size="50" id="tweetFormat" placeholder="Your tweet format" />
+                        <input type="text" name="tweetFormat" size="50" id="tweetFormat" placeholder="Your tweet format" value="<?php echo ($this->tweetFormat) ? $this->tweetFormat : '';?>" />
                     </div>
                 </div>
             </div>
 
             <div class="formSubmitButtons">
-                <input type="submit" class="primary mediumButton" id="createProj" value="Create" />
+                <input type="submit" class="primary mediumButton" id="createProj" name="submit" value="<?php echo (!empty($this->id)) ? 'Update' : 'Create'; ?>" />
                 <input type="button" class="primary mediumButton" id="cancelProj" value="Cancel" />
             </div>
+
+<!--            <?php /*if(!empty($this->id)) { */?>
+                <input type="hidden" name="id" value="<?php /*echo $this->id;*/?>" />
+            --><?php /*} */?>
         </div>
     </form>
 </div>
@@ -137,16 +155,15 @@
             var length = $(".trackGrp").length + 1;
             var html = '<div class="clearfix formGrp trackGrp">' +
                             '<div class="inputLabel">' +
-                                '<input type="text" name="trackName'+length+'" id="trackName'+length+'" placeholder="Name" class="trackName" />' +
+                                '<input type="text" name="trackName[]" id="" placeholder="Name" class="trackName" />' +
                             '</div>' +
                             '<div class="inputEle">' +
-                                '<input type="text" name="trackValue'+length+'" size="50" id="trackValue'+length+'" placeholder="Example Value" class="trackvalue" />' +
+                                '<input type="text" name="trackValue[]" size="50" id="" placeholder="Example Value" class="trackvalue" />' +
                             '</div>' +
                         '</div>';
 
             $('#trackDiv').append(html);
-            $('#trackCounter').val(length);
-            $('#trackName'+length).focusout(function(event) {
+            $('#trackDiv div:nth-child('+ length +')').focusout(function(event) {
                 generateTweetFormat();
             });
         });
@@ -183,7 +200,5 @@
 //
 //            event.preventDefault();
 //        });
-
-
     });
 </script>
