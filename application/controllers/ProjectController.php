@@ -216,12 +216,14 @@ class ProjectController extends Zend_Controller_Action
                 if(!$hasError) {
                     // Save the project to database.
                     $project->setTitle($params['title']);
+                    $project->setHashTag($params['hashTag']);
                     $project->setDescription($params['description']);
                     $project->setSummary($params['summary']);
                     $project->setUseTwitter($params['useTwitter']);
                     $project->setUseInstagram($params['useInstagram']);
                     $project->setUsePicture($params['usePicture']);
                     $project->setGpsReq($params['gpsReq']);
+                    $project->setTrackData($params['trackData']);
                     $project->setTweetFormat($params['tweetFormat']);
                     $project->save();
 
