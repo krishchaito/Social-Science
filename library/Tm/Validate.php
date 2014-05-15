@@ -2,7 +2,7 @@
 
 class Tm_Validate
 {
-    static public function newProjectForm(&$postData)
+    static public function projectForm(&$postData)
     {
         $errors = array();
         $hasError = false;
@@ -17,19 +17,19 @@ class Tm_Validate
         $postData['gpsReq'] = ('on' === Tm_Atrizine::GetValue($postData['gpsReq'], 0)) ? 1 : 0;
         $postData['tweetFormat'] = trim(Tm_Atrizine::GetValue($postData['tweetFormat'], ''));
 
-        $trackCounter = $postData['trackCounter'];
+        $trackCounter = count($postData['trackName']);
         $trackData = array();
         $hasTrackData = false;
-        if($trackCounter > 0) {
-            for($count = 1; $count <= $trackCounter; $count++) {
-                $key = trim(Tm_Atrizine::GetValue($postData['trackName'.$count], ''));
-                $value = trim(Tm_Atrizine::GetValue($postData['trackValue'.$count], ''));
-                if(!empty($key)) {
-                    $hasTrackData = true;
-                    $trackData[$key] = $value;
-                }
+
+        for($count = 0; $count < $trackCounter; $count++) {
+            $key = trim(Tm_Atrizine::GetValue($postData['trackName'][$count], ''));
+            $value = trim(Tm_Atrizine::GetValue($postData['trackValue'][$count], ''));
+            if(!empty($key)) {
+                $trackData[$key] = $value;
+                $hasTrackData = true;
             }
         }
+
         $postData['trackData'] = serialize($trackData);
 
         if(!$hasTrackData || empty($postData['title']) || empty($postData['hashTag']) || empty($postData['summary']) || empty($postData['description']) || empty($postData['tweetFormat'])) {

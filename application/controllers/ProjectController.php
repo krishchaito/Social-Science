@@ -35,7 +35,7 @@ class ProjectController extends Zend_Controller_Action
             $postData = $this->getRequest()->getParams();
 
             // Validate user entered data.
-            list($hasError, $errors) = Tm_Validate::newProjectForm($postData);
+            list($hasError, $errors) = Tm_Validate::projectForm($postData);
             if(!$hasError) {
                 $postData['hashTag'] = '#'.$postData['hashTag'];
                 $postData['pid'] = md5($postData['title']);
@@ -53,6 +53,17 @@ class ProjectController extends Zend_Controller_Action
                 }
 
                 echo 'Failed to create project';
+            } else {
+                $this->view->title = $postData['title'];
+                $this->view->hashTag = $postData['hashTag'];
+                $this->view->summary = $postData['summary'];
+                $this->view->description = $postData['description'];
+                $this->view->useTwitter = $postData['useTwitter'];
+                $this->view->useInstagram = $postData['useInstagram'];
+                $this->view->usePicture = $postData['usePicture'];
+                $this->view->gpsReq = $postData['gpsReq'];
+                $this->view->tweetFormat = $postData['tweetFormat'];
+                $this->view->trackData = unserialize($postData['trackData']);
             }
         }
 
@@ -64,7 +75,6 @@ class ProjectController extends Zend_Controller_Action
 
         $this->view->hasError = $hasError;
         $this->view->errors = $errors;
-        $this->view->title = 'New Project';
     }
 
     /**
@@ -136,7 +146,7 @@ class ProjectController extends Zend_Controller_Action
                 $startDate = date(Tm_Constants::MySqlDateTime, strtotime($params['st_date']));
             }
 
-            // Calculate End Date. Default to today.
+            // Calculate End Date. Default - today.
             if(empty($params['end_date'])) {
                 $date = date("Y-m-d");
             } else {
