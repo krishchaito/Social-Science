@@ -178,8 +178,7 @@
 
         // Auto Suggest tweet format based on hashtag and track data.
         $("input#hashTag").focusout(function(event) {
-            var hashTag = '#' + $("input#hashTag").val();
-            $("input#tweetFormat").val(hashTag);
+            generateTweetFormat();
         });
 
         // Generate tweet format
