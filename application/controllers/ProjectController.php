@@ -192,6 +192,80 @@ class ProjectController extends Zend_Controller_Action
     }
 
     /**
+     * Edit a project
+     */
+    public function editAction()
+    {
+        $params = $this->getRequest()->getParams();
+
+        // Redirect to projects list if we do not have project id
+        if(!isset($params['id'])) {
+            $this->redirect('/projects');
+        }
+        $id = $params['id'];
+        $project = Tm_Project::getById($id);
+
+        $nexturl = '/projects';
+
+        if(false != $project) {
+            $this->view->id = $project->getId();
+
+            if($this->getRequest()->isPost()) {
+                // Validate user entered data.
+                list($hasError, $errors) = Tm_Validate::projectForm($params);
+                if(!$hasError) {
+                    // Save the project to database.
+                    $project->setTitle($params['title']);
+                    $project->setDescription($params['description']);
+                    $project->setSummary($params['summary']);
+                    $project->setUseTwitter($params['useTwitter']);
+                    $project->setUseInstagram($params['useInstagram']);
+                    $project->setUsePicture($params['usePicture']);
+                    $project->setGpsReq($params['gpsReq']);
+                    $project->setTweetFormat($params['tweetFormat']);
+                    $project->save();
+
+                    // Redirect
+                    $this->redirect($nexturl);
+                } else {
+                    $this->view->title = $params['title'];
+                    $this->view->hashTag = $params['hashTag'];
+                    $this->view->summary = $params['summary'];
+                    $this->view->description = $params['description'];
+                    $this->view->useTwitter = $params['useTwitter'];
+                    $this->view->useInstagram = $params['useInstagram'];
+                    $this->view->usePicture = $params['usePicture'];
+                    $this->view->gpsReq = $params['gpsReq'];
+                    $this->view->tweetFormat = $params['tweetFormat'];
+                    $this->view->trackData = unserialize($params['trackData']);
+
+                    $this->view->hasError = $hasError;
+                    $this->view->errors = $errors;
+                }
+            } else {
+                $this->view->title = $project->getTitle();
+                $this->view->hashTag = $project->getHashTag();
+                $this->view->summary = $project->getSummary();
+                $this->view->description = $project->getDescription();
+                $this->view->useTwitter = $project->getUseTwitter();
+                $this->view->useInstagram = $project->getUseInstagram();
+                $this->view->usePicture = $project->getUsePicture();
+                $this->view->gpsReq = $project->getGpsReq();
+                $this->view->tweetFormat = $project->getTweetFormat();
+
+                $trackData = unserialize($project->getTrackData());
+                $this->view->trackData = $trackData;
+                $this->view->trackCounter = count($trackData);
+            }
+        } else {
+            $this->view->errorMsg = "Requested project doesn't exist";
+        }
+
+        // Set URL for CANCEL action
+        $this->view->onProjCancel = $nexturl;
+    }
+
+    /**
      * Pulls Tweets and Posts from Twitter and Instagram and then updates database.
      */
     public function refreshAction()

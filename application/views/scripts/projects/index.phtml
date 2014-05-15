@@ -20,8 +20,13 @@
     <div class="clearfix projectsListContent">
         <?php foreach($this->projects as $project) { ?>
             <div class="projectContent">
-                <div class="projectHeader">
-                    <span id="<?php echo $project->getId(); ?>" class="projectTitle"> <?php echo $project->getTitle(); ?> </span>
+                <div class="clearfix projectHeader">
+                    <div class="fleft" style="width: 95%">
+                        <span id="<?php echo $project->getId(); ?>" class="projectTitle"> <?php echo $project->getTitle(); ?> </span>
+                    </div>
+                    <div class="fright">
+                        <a href="<?php echo '/project/edit/id/'.$project->getId(); ?>">Edit</a>
+                    </div>
                 </div>
 
                 <div class="projectDetails clearfix">
@@ -60,7 +65,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.projectHeader').click(function(event) {
+        $('.projectHeader div:nth-child(1)').click(function(event) {
             var url = $(location).attr('protocol') + '//' + $(location).attr('hostname') + '/project/view/id/' + $(this).children('span')[0].id;
             $(location).attr('href', url);
         });

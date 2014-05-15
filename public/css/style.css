@@ -61,10 +61,10 @@ nav li {
     float: left;
 }
 
-nav li a{ 
+nav li a{
     font-size: 16px;
     color: #FFFFFF;
-    display: block; 
+    display: block;
     padding: 0 15px;
     margin: 0px;
     height: 57px;
@@ -250,8 +250,11 @@ nav li a:hover, nav li a.active {
     padding-bottom: 5px;
     margin-bottom: 10px;
     color: #004A66;
-    cursor: pointer;
     border-bottom: 1px dotted #d1d1d1;
+}
+
+.projectHeader div:nth-child(1){
+    cursor: pointer;
 }
 
 .projectsList .projectDetails {
@@ -447,7 +450,7 @@ nav li a:hover, nav li a.active {
 }
 
 .projectMapCanvas {
-   height: 600px;
+    height: 600px;
 }
 
 .refreshButton {
