@@ -38,7 +38,9 @@
                                 <span class="colTitle">Tag: </span> <?php echo $project->getHashTag(); ?>
                             </div>
                             <div class="projectLastUpdate">
-                                <span class="colTitle">Last Updated On: </span> <?php echo $this->lastUpdatedOn[$project->getId()] ?>
+                                <span class="colTitle">Last Updated On: </span>
+                                <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->lastUpdatedOn[$project->getId()])); ?>")); </script>
+<!--                                --><?php //echo $this->lastUpdatedOn[$project->getId()] ?>
                             </div>
                         </div>
 

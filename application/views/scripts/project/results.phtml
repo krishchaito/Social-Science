@@ -37,7 +37,10 @@
                                         <div class="fleft"><img src="/img/<?php echo strtolower($post->getSource()) ?>.png" style="height: 20px; width: 22px; margin-right: 5px" /></div>
                                         <div class="tweetName fleft"> <?php echo $post->getUsername() ?> </div>
                                         <div class="tweetUsername fleft"> @<?php echo $post->getUserScreenName() ?>  </div>
-                                        <div class="tweetTime fleft"> <?php echo $post->getPostCreatedAt() ?> </div>
+                                        <div class="tweetTime fleft">
+                                            <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($post->getPostCreatedAt())); ?>")); </script>
+<!--                                            --><?php //echo $post->getPostCreatedAt() ?>
+                                        </div>
                                     </div>
                                     <div class="tweetMessage"><?php echo $post->getText() ?></div>
                                     <?php $place = $post->getPlace();

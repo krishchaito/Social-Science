@@ -23,7 +23,10 @@
     <div class="projectTitle fleft"> <?php echo $this->project->getTitle(); ?> </div>
     <div class="fright">
         <div class="fleft lastUpdate">
-            <span class="colTitle"> Last Updated On: </span> <?php echo $this->postsMetaLastUpdatedOn; ?>
+            <span class="colTitle"> Last Updated On: </span>
+            <span id="localeLastUpdatedOn">
+                <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->postsMetaLastUpdatedOn)); ?>")); </script>
+            </span>
         </div>
 
         <div class="fright status">
