@@ -23,6 +23,9 @@ class Tm_Instagram
     protected $apiUrl = 'https://api.instagram.com/v1';
     protected $clientId = '98766d2483ef46c79bf4a51f4044c5cf';
 
+    protected $hasErrors = false;
+    protected $result = array();
+
     // Delete this
     protected $consumerKey = '5mKBk6c6w4mqpbnHZCcByw';
     protected $consumerSecret = 'ffhuHwM4fwTUe6nV6cqbOYUenQd34CvGZ0wtr12SA';
@@ -44,6 +47,8 @@ class Tm_Instagram
                 $this->updatePosts();
             }
         }
+
+        return array($this->hasErrors, $this->result);
     }
 
     public function updatePosts()
@@ -88,6 +93,8 @@ class Tm_Instagram
             $this->totalResultsCount = count($results->data);
             $this->saveMetaData($results->pagination);
             $this->saveProject();
+
+            array_push($this->result, array('code' => 200, 'message' => 'Successfully updated Posts'));
         }
     }
 
@@ -214,7 +221,7 @@ class Tm_Instagram
         return '';
     }
 
-    protected function saveCommunicationToLog($response, $url, $status = 200)
+    protected function saveCommunicationToLog($response, $url)
     {
         $dataLog = new Application_Model_DataLog();
         $dataLog->setProjectId($this->project->getId());
@@ -223,13 +230,18 @@ class Tm_Instagram
         $dataLog->setOrigin('Us');
         $dataLog->setRequestValues($url);
         $dataLog->setResponseValues(print_r($response, true));
-        if(200 == $status) {
+        if(200 == $response->meta->code) {
             $dataLog->setStatus('Succeeded');
         } else {
             $dataLog->setStatus('Failed');
+            $dataLog->setField1($response->meta->error_message);
+            $dataLog->setField2($response->meta->error_type);
+
+            $this->hasErrors = true;
+            array_push($this->result, array('code' => $response->meta->code, 'message' => $response->meta->error_message));
         }
 
-        $dataLog->setStatusCode($status);
+        $dataLog->setStatusCode($response->meta->code);
         $dataLog->setCommunicationDateTime(date(Tm_Constants::MySqlDateTime));
         $dataLog->save();
     }

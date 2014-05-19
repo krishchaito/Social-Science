@@ -24,6 +24,9 @@ class Tm_Twitter
     protected $maxSimultaneousRequests = 3;
     protected $query = array();
 
+    protected $hasErrors = false;
+    protected $result = array();
+
     /**
      * @var Object Application_Model_Projects
      */
@@ -47,6 +50,8 @@ class Tm_Twitter
                 $this->updateTweets();
             }
         }
+
+        return array($this->hasErrors, $this->result);
     }
 
     protected function updateTweets()
@@ -90,6 +95,8 @@ class Tm_Twitter
             $this->totalResultsCount = count($results->statuses);
             $this->saveMetaData($results->search_metadata);
             $this->saveProject();
+
+            array_push($this->result, array('code' => 200, 'message' => 'Successfully updated Tweets'));
         }
     }
 
@@ -217,6 +224,9 @@ class Tm_Twitter
     {
         $error = $response->errors;
         $this->saveCommunicationToLog($response, $error[0]->code, $error[0]->message);
+
+        $this->hasErrors = true;
+        array_push($this->result, array('code' => $error[0]->code, 'message' => $error[0]->message));
     }
 
     protected function saveSuccessCommunicationToLog($response)
