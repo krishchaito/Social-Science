@@ -13,9 +13,9 @@ $projects = Tm_Project::getAllProjects();
 
 // Open file for logging
 $filePath = APPLICATION_PATH . '/../../logs/update_projects_log';
-$file = fopen($filePath, 'a');
+$file = @fopen($filePath, 'a');
 if(!$file) {
-    die('Could not open log file');
+    die('Could not open log file '. $filePath);
 }
 
 // Fetch data from twitter/Instagram
