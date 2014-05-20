@@ -39,8 +39,12 @@
                             </div>
                             <div class="projectLastUpdate">
                                 <span class="colTitle">Last Updated On: </span>
-                                <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->lastUpdatedOn[$project->getId()])); ?>")); </script>
-<!--                                --><?php //echo $this->lastUpdatedOn[$project->getId()] ?>
+
+                                <?php if('NA' == $this->lastUpdatedOn[$project->getId()]) {
+                                    echo $this->lastUpdatedOn[$project->getId()];
+                                } else { ?>
+                                    <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->lastUpdatedOn[$project->getId()])); ?>")); </script>
+                                <?php } ?>
                             </div>
                         </div>
 
