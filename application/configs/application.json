@@ -33,7 +33,7 @@
             },
             "view": []
         },
-        "autoloaderNamespaces": ["Tm_"]
+        "autoloaderNamespaces": ["Tm_", "PHPExcel_", "PHPExcel"]
     },
 
     "staging":{

@@ -453,7 +453,7 @@ nav li a:hover, nav li a.active {
     height: 600px;
 }
 
-.refreshButton {
+.refreshButton, .downloadButton {
     cursor: pointer;
 }
 

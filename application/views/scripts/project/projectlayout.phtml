@@ -16,6 +16,12 @@
                     }
             });
         });
+
+        // Add event for download button
+        $("#downloadButton").click(function() {
+            var url = '<?php echo '/project/download/id/'.$this->id; ?>';
+            $("body").append("<iframe src='" + url+ "' style='display: none;' ></iframe>");
+        });
     });
 </script>
 
@@ -48,8 +54,9 @@
                 </ul>
             </div>
 
-            <div class="fright">
-                <img src="/img/refresh.png" height="20px" id="refreshButton" class="refreshButton" title="Refresh Results" />
+            <div class="fright rightIcons">
+                <img src="/img/refresh_green.png" height="20px" id="refreshButton" class="refreshButton" title="Refresh Results" />
+                <img src="/img/download.png" height="20px" id="downloadButton" class="downloadButton" title="Download Excel" />
             </div>
         </div>
     </div>

@@ -276,14 +276,14 @@ class ProjectController extends Zend_Controller_Action
 
         // Return error if we do not have project id
         if(!isset($params['id'])) {
-            $response = array('status' => 'failed', 'statusCode' => 404);
+            $response = array('status' => 'Bad Request', 'statusCode' => 404);
             echo $this->_helper->json($response);
         }
         $id = $params['id'];
         $project = Tm_Project::getById($id);
 
         if(!is_object($project)) {
-            $response = array('status' => 'failed', 'statusCode' => 500);
+            $response = array('status' => 'Internal Error', 'statusCode' => 500);
             echo $this->_helper->json($response);
         }
 
@@ -301,4 +301,139 @@ class ProjectController extends Zend_Controller_Action
         echo $this->_helper->json($response);
     }
 
+    /**
+     * Prepare and Send excel file with all Tweets and Posts.
+     */
+    public function downloadAction()
+    {
+        // Disable layout
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        // Get all request params
+        $params = $this->getRequest()->getParams();
+
+        // Return error if we do not have project id
+        if(!isset($params['id'])) {
+            $response = array('status' => 'Bad Request', 'statusCode' => 404);
+            echo $this->_helper->json($response);
+        }
+        $id = $params['id'];
+        $project = Tm_Project::getById($id);
+
+        if(!is_object($project)) {
+            $response = array('status' => 'Internal Error', 'statusCode' => 500);
+            echo $this->_helper->json($response);
+        }
+
+        // Get all Posts.
+        $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
+
+        // Get track data
+        $trackData = unserialize($project->getTrackData());
+        $trackDataCounter = count($trackData);
+
+        // Create new PHPExcel object
+        $objPHPExcel = new PHPExcel();
+
+        // Add data
+        $objPHPExcel->setActiveSheetIndex(0);
+        $activeSheet = $objPHPExcel->getActiveSheet();
+        $rowIndex = 1;
+        $colIndex = 0;
+
+        // Add headers
+        $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, 'Id');
+
+        $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, 'HashTag');
+
+        foreach($trackData as $key => $value) {
+            $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+            $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+            $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $key . ' (' . $value . ')');
+        }
+
+        $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, 'Post');
+
+        $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, 'Source');
+
+        $activeSheet->getColumnDimensionByColumn($colIndex)->setAutoSize(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getFont()->setBold(true);
+        $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, 'Date & Time');
+        $rowIndex++;
+
+        // Add data
+        foreach($posts as $post) {
+            // Point column to first index
+            $colIndex = 0;
+
+            // Get post and explode into array
+            $text = $post->getText();
+            $result = explode(" ", $text);
+
+            // Set post Id
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $post->getId());
+
+            // Set hashTag
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $project->getHashTag());
+
+            // Set data
+            for($i = 1; $i <= $trackDataCounter; $i++) {
+                $value = !empty($result[$i]) ? $result[$i] : '';
+                $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $value);
+            }
+
+            // Highlight the post if it is not in required format
+            if($trackDataCounter+1 != count($result)) {
+                $activeSheet->getStyleByColumnAndRow($colIndex, $rowIndex)
+                    ->getFill()
+                    ->applyFromArray(array('type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => array('rgb' => 'F28A8C')));
+            }
+
+            // Set post message
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $text);
+
+            // Set source
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $post->getSource());
+
+            // Set Date & Time
+            $activeSheet->setCellValueByColumnAndRow($colIndex++, $rowIndex, $post->getCreatedDateTime(). ' GMT');
+
+            // Increment Row
+            $rowIndex++;
+        }
+
+        // Rename worksheet
+        $objPHPExcel->getActiveSheet()->setTitle($project->getTitle());
+
+        // Write response headers
+        $this->getResponse()->setRawHeader("Content-Type: application/vnd.ms-excel; charset=UTF-8")
+                ->setRawHeader("Content-Disposition: attachment; filename=".$project->getTitle().".xls")
+                ->setRawHeader("Content-Transfer-Encoding: binary")
+                ->setRawHeader('Cache-Control: max-age=0')
+                ->setRawHeader('Cache-Control: max-age=1') // For IE 9
+                ->setRawHeader("Expires: 0")
+                ->setRawHeader("Cache-Control: must-revalidate, post-check=0, pre-check=0")
+                ->setRawHeader("Pragma: public")
+                ->sendResponse();
+
+        // send file
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+    }
 }
