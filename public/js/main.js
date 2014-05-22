@@ -31,7 +31,7 @@ function printContent(contentId) {
             setTimeout(function() {
                 if(printWindow.print()) {
                     printWindow.close();
-            }},3000);
+            }}, 3000);
         }
     }
 }
@@ -53,4 +53,32 @@ function placeMarkerOnMap(latlong, message) {
     });
 
     return marker;
+}
+
+// notifications
+var notificationTimer;
+function showNotification(params) {
+    clearTimeout(notificationTimer);
+    clearNotification();
+
+    var options = {
+        'duration': 2,
+        'autoClose': true,
+        'type': 'success',
+        'message': ''
+    };
+
+    $.extend(true, options, params);
+    $("#notification div:first").addClass('notification notification-'+options.type).html(options.message).show();
+
+    if(options.autoClose) {
+        notificationTimer = setTimeout(function() {
+            clearTimeout(notificationTimer);
+            clearNotification();
+        }, options.duration * 1000);
+    }
+}
+
+function clearNotification() {
+    $("#notification div:first").removeClass().html('').hide();
 }

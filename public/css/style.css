@@ -501,3 +501,68 @@ nav li a:hover, nav li a.active {
 .onMapContent {
     width: 420px;
 }
+
+/*-------------------------------- Notifications --------------------------------*/
+#notification {
+    position: relative;
+}
+
+.notification {
+    background-size: 20px 20px;
+    box-shadow: 0 5px 0 hsla(0,0%,0%,.1);
+    display: block;
+    font: bold 16px/40px sans-serif;
+    height: 40px;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    top: -45px;
+    width: 100%;
+    -webkit-animation: notification 1s ease forwards;
+    -moz-animation: notification 1s ease forwards;
+    -ms-animation: notification 1s ease forwards;
+    -o-animation: notification 1s ease forwards;
+    animation: notification 1s ease forwards;
+}
+
+.notification-success {
+    color: #3C763D;
+    background-color: #DFF0D8;
+}
+
+.notification-info {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+}
+
+.notification-danger {
+    color: #a94442;
+    background-color: #f2dede;
+}
+
+/* Animation */
+@-webkit-keyframes notification {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {top: 0;}
+}
+@-moz-keyframes notification {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {top: 0;}
+}
+@-ms-keyframes notification {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {top: 0;}
+}
+@-o-keyframes notification {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {top: 0;}
+}
+@keyframes notification {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {top: 0;}
+}

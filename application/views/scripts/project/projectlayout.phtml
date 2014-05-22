@@ -11,7 +11,11 @@
                         if(200 == data.statusCode) {
                             location.reload(true);
                         } else {
-                            alert('An error has occurred. Please try again later.');
+                            showNotification({
+                                message: 'An error has occurred. Please try again later.',
+                                type: 'danger',
+                                duration: 3
+                            });
                         }
                     }
             });

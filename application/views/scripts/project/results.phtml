@@ -104,8 +104,14 @@
             var longitude = $(this).children('input.longitude').val();
 
             if(latitude == "" || longitude == "") {
-                alert('Location details are not available for this message.');
+                showNotification({
+                    message: 'Location details are not available for this message.',
+                    type: 'info'
+                });
             } else {
+                // Hide previous notifications.
+                clearNotification();
+
                 // Show marker on map
                 var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(this).children('div.tweetMessage').html() + '</div>';
                 var imageUrl = $(this).children('input.imageUrl').val();
