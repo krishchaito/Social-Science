@@ -16,12 +16,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Set StyleSheets
         $view->headLink()->prependStylesheet('/css/reset.css');
         $view->headLink()->appendStylesheet('/css/style.css');
-        $view->headLink()->appendStylesheet('/css/jquery-ui.custom.css');
+        $view->headLink()->appendStylesheet('/css/jquery-ui.custom.min.css');
 
         // Set Javascript Libs
-        $view->headScript()->prependFile('/js/jquery.js');
-        $view->headScript()->appendFile('/js/jquery.nicescroll.js');
-        $view->headScript()->appendFile('/js/jquery-ui.custom.js');
+        $view->headScript()->prependFile('/js/jquery.min.js');
+        $view->headScript()->appendFile('/js/jquery.nicescroll.min.js');
+        $view->headScript()->appendFile('/js/jquery-ui.custom.min.js');
         $view->headScript()->appendFile('/js/main.js');
     }
 }
