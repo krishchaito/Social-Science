@@ -42,6 +42,8 @@ class Application_Model_ProjectsMapper extends Application_Model_DbMapper
             $id = $this->getDbTable()->insert($data);
             $projects->setId($id);
         } else {
+            // Do not reset createdDateTime while updating projects
+            unset($data['createdDateTime']);
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
     }
