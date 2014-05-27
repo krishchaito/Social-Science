@@ -15,7 +15,7 @@ class ProjectsController extends Tm_BaseController
         $timeZone = $session->getTimeZone();
 
         $projectsMapper = new Application_Model_ProjectsMapper();
-        $projects = $projectsMapper->fetchAll();
+        $projects = $projectsMapper->fetchAllByCreatedDateTimeDesc();
 
         $lastUpdatedOn = array();
         $projectsJSON = array();
