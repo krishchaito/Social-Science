@@ -20,4 +20,13 @@ class Tm_Atrizine
     {
         return isset($varName) ? trim($varName) : $default;
     }
+
+    static public function GetRequestScheme()
+    {
+        if(!empty($_SERVER['REQUEST_SCHEME'])) {
+            return $_SERVER['REQUEST_SCHEME'];
+        }
+
+        return 'http';
+    }
 }

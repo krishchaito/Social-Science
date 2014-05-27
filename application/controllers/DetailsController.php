@@ -21,7 +21,7 @@ class DetailsController extends Tm_BaseController
         $oldSession = $this->getSession();
         $nextUrl = $oldSession->nextUrl;
         if(empty($nextUrl)) {
-            $nextUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+            $nextUrl = Tm_Atrizine::GetRequestScheme() . '://' . $_SERVER['HTTP_HOST'];
         }
 
         // destroy old session

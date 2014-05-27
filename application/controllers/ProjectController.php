@@ -68,7 +68,7 @@ class ProjectController extends Tm_BaseController
         }
 
         // Set URL for CANCEL action
-        $this->view->onProjCancel = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        $this->view->onProjCancel = Tm_Atrizine::GetRequestScheme() . '://' . $_SERVER['HTTP_HOST'];
         if(!empty($_SERVER['HTTP_REFERER'])) {
             $this->view->onProjCancel = $_SERVER['HTTP_REFERER'];
         }

@@ -34,7 +34,7 @@
             var visitortimezone = -visitortime.getTimezoneOffset();
             createCookie('tz', visitortimezone);
 
-            var nextUrl = "<?php echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/details/create/tz/'?>" + visitortimezone;
+            var nextUrl = "<?php echo Tm_Atrizine::GetRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . '/details/create/tz/'?>" + visitortimezone;
             location.replace(nextUrl);
         </script>
     </body>
