@@ -4,6 +4,7 @@ body {
     background: #f4f4f4;
     font-family: 'Open Sans', sans-serif;
     color: #1d1f21;
+    min-width: 1060px;
 }
 
 .fleft {float:left;}
