@@ -22,6 +22,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->prependFile('/js/jquery.min.js');
         $view->headScript()->appendFile('/js/jquery.nicescroll.min.js');
         $view->headScript()->appendFile('/js/jquery-ui.custom.min.js');
+        $view->headScript()->appendFile('/js/angular.min.js');
         $view->headScript()->appendFile('/js/main.js');
     }
 }

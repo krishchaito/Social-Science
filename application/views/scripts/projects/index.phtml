@@ -11,61 +11,59 @@
 
             <div class="fright">
                 <div class="searchbar">
-                    <input type="text" name="search" placeholder="Search">
+                    <input type="text" name="search" placeholder="Search" ng-model="search._title">
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="clearfix projectsListContent">
-        <?php foreach($this->projects as $project) { ?>
-            <div class="projectContent">
-                <div class="clearfix projectHeader">
-                    <div class="fleft" style="width: 95%">
-                        <span id="<?php echo $project->getId(); ?>" class="projectTitle"> <?php echo $project->getTitle(); ?> </span>
-                    </div>
-                    <div class="fright">
-                        <a class="primary mediumButton" href="<?php echo '/project/edit/id/'.$project->getId(); ?>">Edit</a>
-                    </div>
+    <script type="text/javascript">
+        tmApp.controller('ProjectsListCtrl', function($scope) {
+            $scope.projects = <?php echo $this->projects; ?>;
+        });
+    </script>
+
+    <div class="clearfix projectsListContent" ng-controller="ProjectsListCtrl">
+        <div class="projectContent" ng-repeat="project in projects | filter:search">
+            <div class="clearfix projectHeader">
+                <div class="fleft" style="width: 95%">
+                    <span id="{{project._id}}" class="projectTitle"> {{project._title}} </span>
                 </div>
+                <div class="fright">
+                    <a class="primary mediumButton" href="/project/edit/id/{{project._id}}">Edit</a>
+                </div>
+            </div>
 
-                <div class="projectDetails clearfix">
-                    <div class="projectSummary"><span class="colTitle">Summary: </span> <?php echo $project->getSummary(); ?> </div>
+            <div class="projectDetails clearfix">
+                <div class="projectSummary"><span class="colTitle">Summary: </span> {{project._summary}} </div>
 
-                    <div class="projectData">
-                        <div class="projectDataCol fleft">
-                            <div class="projectTag">
-                                <span class="colTitle">Tag: </span> <?php echo $project->getHashTag(); ?>
-                            </div>
-                            <div class="projectLastUpdate">
-                                <span class="colTitle">Last Updated On: </span>
-
-                                <?php if('NA' == $this->lastUpdatedOn[$project->getId()]) {
-                                    echo $this->lastUpdatedOn[$project->getId()];
-                                } else { ?>
-                                    <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->lastUpdatedOn[$project->getId()])); ?>")); </script>
-                                <?php } ?>
-                            </div>
+                <div class="projectData">
+                    <div class="projectDataCol fleft">
+                        <div class="projectTag">
+                            <span class="colTitle">Tag: </span> {{project._hashTag}}
                         </div>
-
-                        <div class="projectDataCol fleft">
-                            <div class="projectTweets">
-                                <span class="colTitle">No: of Tweets: </span> <?php echo $project->getNumOfTweets() ?>
-                            </div>
-                            <div class="projectInstagramPosts">
-                                <span class="colTitle">No: of Instagram Posts: </span> <?php echo $project->getNumOfPosts() ?>
-                            </div>
+                        <div class="projectLastUpdate">
+                            <span class="colTitle">Last Updated On: </span> {{project._lastUpdatedOn}}
                         </div>
+                    </div>
 
-                        <div class="projectDataCol fleft">
-                            <div class="projectTweets">
-                                <span class="colTitle">Status: </span> <span class="<?php echo strtolower($project->getStatus()) ?>"> <?php echo $project->getStatus() ?> </span>
-                            </div>
+                    <div class="projectDataCol fleft">
+                        <div class="projectTweets">
+                            <span class="colTitle">No: of Tweets: </span> {{project._numOfTweets}}
+                        </div>
+                        <div class="projectInstagramPosts">
+                            <span class="colTitle">No: of Instagram Posts: </span> {{project._numOfPosts}}
+                        </div>
+                    </div>
+
+                    <div class="projectDataCol fleft">
+                        <div class="projectTweets">
+                            <span class="colTitle">Status: </span> <span class="{{project._status|lowercase}}"> {{project._status}} </span>
                         </div>
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        </div>
     </div>
 </div>
 

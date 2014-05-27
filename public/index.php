@@ -20,10 +20,15 @@ date_default_timezone_set('UTC');
 /** Zend_Application */
 require_once 'Zend/Application.php';
 
-// Create application, bootstrap, and run
+// Create application
 $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.json'
 );
+
+// Start Session
+require_once 'Tm/Session/SessionStart.php';
+
+// bootstrap and run
 $application->bootstrap()
             ->run();

@@ -38,8 +38,10 @@
                                         <div class="tweetName fleft"> <?php echo $post->getUsername() ?> </div>
                                         <div class="tweetUsername fleft"> @<?php echo $post->getUserScreenName() ?>  </div>
                                         <div class="tweetTime fleft">
-                                            <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($post->getPostCreatedAt())); ?>")); </script>
-<!--                                            --><?php //echo $post->getPostCreatedAt() ?>
+                                            <?php
+                                                $postCreatedAtStr = strtotime($post->getPostCreatedAt());
+                                                echo date(Tm_Constants::HUMAN_READABLE_DATETIME, $postCreatedAtStr + $this->timeZone * 60);
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="tweetMessage"><?php echo $post->getText() ?></div>

@@ -1,3 +1,4 @@
+var tmApp = angular.module('tmApp', []);
 var googleMap;
 var marker;
 

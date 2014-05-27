@@ -3,7 +3,7 @@
 /**
  * Class ProjectController
  */
-class ProjectController extends Zend_Controller_Action
+class ProjectController extends Tm_BaseController
 {
 
     /**
@@ -121,9 +121,18 @@ class ProjectController extends Zend_Controller_Action
         $project = Tm_Project::getById($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
+        $session = $this->getSession();
+        $timeZone = $session->getTimeZone();
+
         $this->view->id = $project->getId();
         $this->view->project = $project;
-        $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
+
+        if(is_object($postsMetaLastTweetUpdatedOn)) {
+            $lastUpdatedDateStr = strtotime($postsMetaLastTweetUpdatedOn->getMetaValue());
+            $this->view->postsMetaLastUpdatedOn = date(Tm_Constants::HUMAN_READABLE_DATETIME, $lastUpdatedDateStr + $timeZone * 60);
+        } else {
+            $this->view->postsMetaLastUpdatedOn = 'NA';
+        }
     }
 
     /**
@@ -138,6 +147,9 @@ class ProjectController extends Zend_Controller_Action
             $this->redirect('/projects');
         }
         $id = $params['id'];
+
+        $session = $this->getSession();
+        $timeZone = $session->getTimeZone();
 
         if(!empty($params['search']) && ($params['search'] == 'Search')) {
             // Calculate Start Date.
@@ -162,11 +174,17 @@ class ProjectController extends Zend_Controller_Action
 
         $project = Tm_Project::getById($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
+        if(is_object($postsMetaLastTweetUpdatedOn)) {
+            $lastUpdatedDateStr = strtotime($postsMetaLastTweetUpdatedOn->getMetaValue());
+            $this->view->postsMetaLastUpdatedOn = date(Tm_Constants::HUMAN_READABLE_DATETIME, $lastUpdatedDateStr + $timeZone * 60);
+        } else {
+            $this->view->postsMetaLastUpdatedOn = 'NA';
+        }
 
         $this->view->id = $project->getId();
         $this->view->project = $project;
         $this->view->posts = $posts;
-        $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
+        $this->view->timeZone = $timeZone;
     }
 
     /**
@@ -185,10 +203,19 @@ class ProjectController extends Zend_Controller_Action
         $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
 
+        $session = $this->getSession();
+        $timeZone = $session->getTimeZone();
+
         $this->view->id = $project->getId();
         $this->view->project = $project;
         $this->view->posts = $posts;
-        $this->view->postsMetaLastUpdatedOn = (is_object($postsMetaLastTweetUpdatedOn)) ? $postsMetaLastTweetUpdatedOn->getMetaValue() : 'NA';
+
+        if(is_object($postsMetaLastTweetUpdatedOn)) {
+            $lastUpdatedDateStr = strtotime($postsMetaLastTweetUpdatedOn->getMetaValue());
+            $this->view->postsMetaLastUpdatedOn = date(Tm_Constants::HUMAN_READABLE_DATETIME, $lastUpdatedDateStr + $timeZone * 60);
+        } else {
+            $this->view->postsMetaLastUpdatedOn = 'NA';
+        }
     }
 
     /**

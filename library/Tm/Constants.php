@@ -9,6 +9,8 @@
 Class Tm_Constants
 {
     const MySqlDateTime = 'Y-m-d H:i:s';
+    const HUMAN_READABLE_DATETIME = 'M d, Y h:i A';
+
     const TWITTER = 'Twitter';
     const INSTAGRAM = 'Instagram';
 

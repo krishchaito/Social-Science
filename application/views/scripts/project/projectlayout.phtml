@@ -35,7 +35,7 @@
         <div class="fleft lastUpdate">
             <span class="colTitle"> Last Updated On: </span>
             <span id="localeLastUpdatedOn">
-                <script type="text/javascript"> document.write(getLocalizedTime("<?php echo date("m/d/Y H:i:s", strtotime($this->postsMetaLastUpdatedOn)); ?>")); </script>
+                <?php echo $this->postsMetaLastUpdatedOn; ?>
             </span>
         </div>
 
