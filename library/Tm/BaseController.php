@@ -29,7 +29,7 @@ class Tm_BaseController extends Zend_Controller_Action
 
         // Redirect and get user time zone if we do not have user session.
         if (!$TmSession->session instanceof Tm_Session) {
-            $TmSession->nextUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $TmSession->nextUrl = Tm_Atrizine::GetRequestScheme() . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $this->redirect('/details');
         }
 
