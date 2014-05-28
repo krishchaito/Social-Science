@@ -43,6 +43,7 @@ class Application_Model_DataLogMapper extends Application_Model_DbMapper
             $insertId = $this->getDbTable()->insert($data);
             $dataLog->setId($insertId);
         } else {
+            unset($data['communicationDateTime]']);
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
     }

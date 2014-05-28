@@ -44,6 +44,7 @@ class Application_Model_PostsMapper extends Application_Model_DbMapper
             $insertId = $this->getDbTable()->insert($data);
             $posts->setId($insertId);
         } else {
+            unset($data['createdDateTime']);
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
     }

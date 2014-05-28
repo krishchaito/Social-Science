@@ -147,32 +147,57 @@ class ProjectController extends Tm_BaseController
             $this->redirect('/projects');
         }
         $id = $params['id'];
+        $project = Tm_Project::getById($id);
+        if(!is_object($project)) {
+            throw new Zend_Exception('Requested project does not exist.');
+        }
+
+        if($project->getUseTwitter()) {
+            $twitter = new Tm_Twitter();
+            $twitter->update($project);
+        }
+
+        if($project->getUseInstagram()) {
+            $instagram = new Tm_Instagram();
+            $instagram->update($project);
+        }
 
         $session = $this->getSession();
         $timeZone = $session->getTimeZone();
 
         if(!empty($params['search']) && ($params['search'] == 'Search')) {
-            // Calculate Start Date.
+            // get Start Date and convert it from user timezone to GMT
             $startDate = '';
             if(!empty($params['st_date'])) {
-                $startDate = date(Tm_Constants::MySqlDateTime, strtotime($params['st_date']));
+                $startDateStr = strtotime($params['st_date']);
+                $startDate = date(Tm_Constants::MySqlDateTime, $startDateStr - $timeZone * 60);
+                $this->view->startDate = $params['st_date'];
             }
 
             // Calculate End Date. Default - today.
             if(empty($params['end_date'])) {
                 $date = date("Y-m-d");
-            } else {
-                $date = date("Y-m-d", strtotime($params['end_date']));
-            }
-            $explodedDate = explode('-', $date);
-            $endDate = date(Tm_Constants::MySqlDateTime, mktime(23, 59, 59, $explodedDate[1], $explodedDate[2], $explodedDate[0]));
+                $explodedDate = explode('-', $date);
+                $calculateEndDate = date(Tm_Constants::MySqlDateTime, mktime(23, 59, 59, $explodedDate[1], $explodedDate[2], $explodedDate[0]));
+                $endDateStr = strtotime($calculateEndDate);
 
-            $posts = Tm_Project::getPostsByProjectIdWithSearchString($id, $startDate, $endDate);
+                // Display end date in user timezone
+                $this->view->endDate = date('M d, Y', strtotime(date(Tm_Constants::MySqlDateTime)) + $timeZone * 60);
+            } else {
+                $this->view->endDate = $params['end_date'];
+
+                // calculate end time and Convert enddate from user timezone to GMT
+                $explodedDate = explode('-', date("Y-m-d", strtotime($params['end_date'])));
+                $calculateEndDate = date(Tm_Constants::MySqlDateTime, mktime(23, 59, 59, $explodedDate[1], $explodedDate[2], $explodedDate[0]));
+                $endDateStr = strtotime($calculateEndDate) - $timeZone * 60;
+            }
+
+            $endDate = date(Tm_Constants::MySqlDateTime, $endDateStr);
+            $posts = Tm_Project::getPostsByProjectIdWithSearchDateString($id, $startDate, $endDate);
         } else {
             $posts = Tm_Project::getPostsByProjectIdWithPostCreatedAtDesc($id);
         }
 
-        $project = Tm_Project::getById($id);
         $postsMetaLastTweetUpdatedOn = Tm_Project::getPostsByMetaKeyDesc(Tm_Constants::lASTUPDATEDON_METAKEY, $id);
         if(is_object($postsMetaLastTweetUpdatedOn)) {
             $lastUpdatedDateStr = strtotime($postsMetaLastTweetUpdatedOn->getMetaValue());
@@ -320,8 +345,8 @@ class ProjectController extends Tm_BaseController
         }
 
         if($project->getUseInstagram()) {
-            $twitter = new Tm_Instagram();
-            $twitter->update($project);
+            $instagram = new Tm_Instagram();
+            $instagram->update($project);
         }
 
         $response = array('status' => 'success', 'statusCode' => 200);

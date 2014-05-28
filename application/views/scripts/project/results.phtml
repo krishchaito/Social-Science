@@ -8,10 +8,10 @@
                     <form action="<?php echo '/project/results/id/'.$this->id; ?>" method="get" autocomplete="off">
                         <div class="formGrp">
                             <label class="">Start Date</label>
-                            <input type="text" name="st_date" id="st_date" value="" />
+                            <input type="text" name="st_date" id="st_date" value="<?php echo empty($this->startDate) ? '' : $this->startDate; ?>" />
 
                             <label class="">End Date</label>
-                            <input type="text" name="end_date" id="end_date" value="" />
+                            <input type="text" name="end_date" id="end_date" value="<?php echo empty($this->endDate) ? '' : $this->endDate; ?>" />
                         </div>
 
                         <input type="submit" class="fright primary mediumButton" id="showAllButton" name="showAll" value="Show All" style="margin-left: 3px;" />
@@ -88,8 +88,37 @@
         $('.projectsListNav li:nth-child(2)').addClass('activeMenu');
 
         // Date Picker
-        $("#st_date").datepicker({autoSize: true, dateFormat: "M d, yy", duration: "fast", maxDate: 0, showAnim: "slideDown"});
-        $("#end_date").datepicker({autoSize: true, dateFormat: "M d, yy", duration: "fast", maxDate: 0, showAnim: "slideDown"});
+        var startDate = $("#st_date");
+        var endDate = $("#end_date");
+
+        var options = {autoSize: true,
+                        dateFormat: "M d, yy",
+                        duration: "fast",
+                        maxDate: 0,
+                        showAnim: "slideDown"
+                    };
+        var startDateOptions = {};
+        var endDateOptions = {};
+        $.extend(startDateOptions, options, {onClose: function(dateText, inst) {
+                if(dateText) {
+                    endDate.datepicker("option", "minDate", dateText);
+                } else {
+                    endDate.datepicker("option", "minDate", '');
+                }
+            }
+        });
+
+        $.extend(endDateOptions, options, {onClose: function(dateText, inst) {
+                if(dateText) {
+                    startDate.datepicker("option", "maxDate", dateText);
+                } else {
+                    startDate.datepicker("option", "maxDate", '');
+                }
+            }
+        });
+
+        startDate.datepicker(startDateOptions);
+        endDate.datepicker(endDateOptions);
 
         // On clicking show this tweet on map
         $('.tweet').click(function() {
