@@ -20,8 +20,8 @@ class Tm_Instagram
      */
     protected $project = '';
 
-    protected $apiUrl = 'https://api.instagram.com/v1';
-    protected $clientId = '98766d2483ef46c79bf4a51f4044c5cf';
+    protected $apiUrl;
+    protected $clientId;
 
     protected $hasErrors = false;
     protected $result = array();
@@ -44,6 +44,7 @@ class Tm_Instagram
             return array();
         }
         $this->project = $project;
+        $this->loadConfig();
 
         for($requestNo = 0; $requestNo < $this->maxSimultaneousRequests; $requestNo++) {
             if((empty($this->totalResultsCount) && $requestNo < 1) || ($this->totalResultsCount == 20)) {
@@ -249,4 +250,10 @@ class Tm_Instagram
         $dataLog->save();
     }
 
+    protected function loadConfig()
+    {
+        $config = new Zend_Config_Json(APPLICATION_PATH . '/configs/instagram.json', APPLICATION_ENV);
+        $this->clientId = $config->get('clientId');
+        $this->apiUrl = $config->get('apiUrl');
+    }
 }

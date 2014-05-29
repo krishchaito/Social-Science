@@ -1,0 +1,18 @@
+{
+    "production": {
+        "clientId" : "98766d2483ef46c79bf4a51f4044c5cf",
+        "apiUrl": "https://api.instagram.com/v1"
+    },
+
+    "staging":{
+        "_extends": "production"
+    },
+
+    "testing":{
+        "_extends": "production"
+    },
+
+    "development":{
+        "_extends": "production"
+    }
+}
