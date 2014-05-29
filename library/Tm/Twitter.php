@@ -42,6 +42,10 @@ class Tm_Twitter
 
     public function update(Application_Model_Projects &$project)
     {
+        if(Application_Model_Projects::STATUS_CLOSED == $project->getStatus()) {
+            return array();
+        }
+
         $this->project = $project;
         $this->loadConfig();
 

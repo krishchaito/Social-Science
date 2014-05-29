@@ -26,6 +26,42 @@
             var url = '<?php echo '/project/download/id/'.$this->id; ?>';
             $("body").append("<iframe src='" + url+ "' style='display: none;' ></iframe>");
         });
+
+        // Close project
+        $("#closeProjectButton").click(function() {
+            var id = '<?php echo $this->id; ?>';
+            var close = confirm("You are about to close this project. Are you sure?");
+            if(close) {
+                $.ajax({url: '/project/close/id/' + id,
+                    type: "GET",
+                    data: {},
+                    dataType: "json",
+                    success: function(response, textStatus, jqXHR ) {
+                        if(200 == response.status.code) {
+                            $('#projStatusValue').removeClass().addClass('closed').html('Closed');
+                            $('#closeProjectButton').hide();
+                            $('#refreshButton').hide();
+
+                            showNotification({
+                                message: response.status.message,
+                                type: 'success'
+                            });
+                        } else {
+                            showNotification({
+                                message: response.status.message,
+                                type: 'danger'
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown ) {
+                        showNotification({
+                            message: textStatus,
+                            type: 'danger'
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 
@@ -39,9 +75,16 @@
             </span>
         </div>
 
-        <div class="fright status">
-            <span class="colTitle">Status: </span>
-            <span class="<?php echo strtolower($this->project->getStatus()); ?>"> <?php echo $this->project->getStatus(); ?> </span>
+        <div class="fright">
+            <div class="fleft status">
+                <span class="colTitle">Status: </span>
+                <span id="projStatusValue" class="<?php echo strtolower($this->project->getStatus()); ?>"> <?php echo $this->project->getStatus(); ?> </span>
+            </div>
+            <?php if(Application_Model_Projects::STATUS_ACTIVE == $this->project->getStatus()) { ?>
+                <div class="fright" style="margin-left: 0;">
+                    <img src="/img/close.png" height="20px" id="closeProjectButton" class="closeProjectButton" title="Close Project" />
+                </div>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -59,7 +102,9 @@
             </div>
 
             <div class="fright rightIcons">
-                <img src="/img/refresh_green.png" height="20px" id="refreshButton" class="refreshButton" title="Refresh Results" />
+                <?php if(Application_Model_Projects::STATUS_ACTIVE == $this->project->getStatus()) { ?>
+                    <img src="/img/refresh_green.png" height="20px" id="refreshButton" class="refreshButton" title="Refresh Results" />
+                <?php } ?>
                 <img src="/img/download.png" height="20px" id="downloadButton" class="downloadButton" title="Download Excel" />
             </div>
         </div>

@@ -3,9 +3,9 @@
         <div class="clearfix">
             <div class="fleft">
                 <ul class="projectsListNav">
-                    <li><a href="#">Active</a></li>
-                    <li><a href="#">Closed</a></li>
-                    <li class="activeMenu"><a href="#">All</a></li>
+                    <li id="activeMenu"><a href="/projects/index/f/active">Active</a></li>
+                    <li id="closedMenu"><a href="/projects/index/f/closed">Closed</a></li>
+                    <li id="allMenu"><a href="/projects">All</a></li>
                 </ul>
             </div>
 
@@ -30,7 +30,7 @@
                     <span id="{{project._id}}" class="projectTitle"> {{project._title}} </span>
                 </div>
                 <div class="fright">
-                    <a class="primary mediumButton" href="/project/edit/id/{{project._id}}">Edit</a>
+                    <a class="primary mediumButton" href="/project/edit/id/{{project._id}}" ng-if="project._status == 'Active'">Edit</a>
                 </div>
             </div>
 
@@ -76,5 +76,8 @@
 
         // Add active class for projects navigation menu
         $('nav li a#projectNav').addClass('active');
+
+        var activeProjectMenu = '<?php echo $this->activeProjectMenu ?>';
+        $('#'+ activeProjectMenu).addClass('activeMenu');
     });
 </script>

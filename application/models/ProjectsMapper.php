@@ -74,6 +74,16 @@ class Application_Model_ProjectsMapper extends Application_Model_DbMapper
         return $entries;
     }
 
+    public function fetchAllByStatusAndCreatedDateTimeDesc($status)
+    {
+        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('status = ?', $status)->order('createdDateTime DESC'));
+        $entries = array();
+        foreach ($resultSet as $row) {
+            $entries[] = new Application_Model_Projects($row->toArray());
+        }
+        return $entries;
+    }
+
     /**
      * @param $id
      * @return Application_Model_Projects

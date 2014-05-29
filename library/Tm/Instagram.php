@@ -40,6 +40,9 @@ class Tm_Instagram
 
     public function update(Application_Model_Projects &$project)
     {
+        if(Application_Model_Projects::STATUS_CLOSED == $project->getStatus()) {
+            return array();
+        }
         $this->project = $project;
 
         for($requestNo = 0; $requestNo < $this->maxSimultaneousRequests; $requestNo++) {

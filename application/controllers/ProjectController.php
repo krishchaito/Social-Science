@@ -256,6 +256,15 @@ class ProjectController extends Tm_BaseController
         }
         $id = $params['id'];
         $project = Tm_Project::getById($id);
+        if(!is_object($project)) {
+            $this->view->errorMsg = 'An error occured. Please try again later.';
+            exit;
+        }
+
+        if(Application_Model_Projects::STATUS_CLOSED == $project->getStatus()) {
+            $this->view->errorMsg = 'This project was closed. You cannot edit it now.';
+            exit;
+        }
 
         $nexturl = '/projects';
 
@@ -350,6 +359,26 @@ class ProjectController extends Tm_BaseController
         }
 
         $response = array('status' => 'success', 'statusCode' => 200);
+        echo $this->_helper->json($response);
+    }
+
+    public function closeAction()
+    {
+        $id = $this->getRequest()->getParam('id', 0);
+        if(empty($id)) {
+            $status = array('message' => 'Bad Request', 'code' => 400);
+            $response = array('status' => $status);
+            echo $this->_helper->json($response);
+        }
+
+        $project = $project = Tm_Project::getById($id);
+        if(!is_object($project)) {
+            $response = array('status' => array('message' => 'Internal Error', 'code' => 500));
+        } else {
+            $project->setStatus(Application_Model_Projects::STATUS_CLOSED);
+            $project->save();
+            $response = array('status' => array('message' => 'Project Closed Successfully', 'code' => 200));
+        }
         echo $this->_helper->json($response);
     }
 

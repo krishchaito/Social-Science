@@ -19,9 +19,12 @@ class Application_Model_Projects extends Application_Model_Db
     protected $_trackData = '';
     protected $_numOfTweets = 0;
     protected $_numOfPosts = 0;
-    protected $_status = 'Active';
+    protected $_status = self::STATUS_ACTIVE;
     protected $_createdDateTime = '0000-00-00 00:00:00';
     protected $_tsLastUpdated = '';
+
+    const STATUS_ACTIVE = 'Active';
+    const STATUS_CLOSED = 'Closed';
 
     public function __construct(array $options = null)
     {

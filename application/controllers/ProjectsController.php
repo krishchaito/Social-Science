@@ -11,13 +11,21 @@ class ProjectsController extends Tm_BaseController
     // Displays list of all the projects
     public function indexAction()
     {
+        $request = $this->getRequest();
         $session = $this->getSession();
         $timeZone = $session->getTimeZone();
+        $this->view->activeProjectMenu = 'allMenu';
 
         $projectsMapper = new Application_Model_ProjectsMapper();
-        $projects = $projectsMapper->fetchAllByCreatedDateTimeDesc();
+        $filter = $request->getParam('f', '');
 
-        $lastUpdatedOn = array();
+        if('closed' == strtolower($filter) || 'active' == strtolower($filter)) {
+            $this->view->activeProjectMenu = $filter.'Menu';
+            $projects = $projectsMapper->fetchAllByStatusAndCreatedDateTimeDesc($filter);
+        } else {
+            $projects = $projectsMapper->fetchAllByCreatedDateTimeDesc();
+        }
+
         $projectsJSON = array();
 
         foreach($projects as $project) {
