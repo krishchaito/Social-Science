@@ -10,7 +10,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('HTML5');
 
         // Set the initial title and separator:
-        $view->headTitle('TweetMap')
+        $view->headTitle('SocialScienceMap')
              ->setSeparator(' - ');
 
         // Set StyleSheets

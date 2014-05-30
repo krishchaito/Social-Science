@@ -60,8 +60,8 @@ class ProjectController extends Tm_BaseController
                 $this->view->description = $postData['description'];
                 $this->view->useTwitter = $postData['useTwitter'];
                 $this->view->useInstagram = $postData['useInstagram'];
-                $this->view->usePicture = $postData['usePicture'];
-                $this->view->gpsReq = $postData['gpsReq'];
+//                $this->view->usePicture = $postData['usePicture'];
+//                $this->view->gpsReq = $postData['gpsReq'];
                 $this->view->tweetFormat = $postData['tweetFormat'];
                 $this->view->trackData = unserialize($postData['trackData']);
             }
