@@ -499,11 +499,12 @@ class ProjectController extends Tm_BaseController
         }
 
         // set worksheet title. Excel allows only 30 chars in worksheet title
+        $fileName = substr($project->getHashTag(), 1);
         $activeSheet->setTitle(substr($project->getHashTag(), 0, 30));
 
         // Write response headers
         $this->getResponse()->setRawHeader("Content-Type: application/vnd.ms-excel; charset=UTF-8")
-                ->setRawHeader("Content-Disposition: attachment; filename=".$project->getHashTag().".xls")
+                ->setRawHeader("Content-Disposition: attachment; filename=".$fileName.".xls")
                 ->setRawHeader("Content-Transfer-Encoding: binary")
                 ->setRawHeader('Cache-Control: max-age=0')
                 ->setRawHeader('Cache-Control: max-age=1') // For IE 9
