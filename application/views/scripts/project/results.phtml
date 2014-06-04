@@ -119,6 +119,7 @@
 
     // Open info window on clicking Tweet
     $('.tweet').click(function() {
+        window.location.hash = '';
         $('.tweet').removeClass('tweetSelected');
         $(this).addClass('tweetSelected');
         var postId = $(this).children('input#postId').val();
