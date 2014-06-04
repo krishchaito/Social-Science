@@ -32,7 +32,7 @@
 
                             <?php foreach($this->posts as $post) { ?>
 
-                                <div class="tweet">
+                                <div class="tweet" id="<?php echo 'id'.$post->getId() ?>">
                                     <div class="clearfix tweetHeading">
                                         <div class="fleft"><img src="/img/<?php echo strtolower($post->getSource()) ?>.png" style="height: 20px; width: 22px; margin-right: 5px" /></div>
                                         <div class="tweetName fleft"> <?php echo $post->getUsername() ?> </div>
@@ -80,17 +80,16 @@
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="/js/overlappingmarkerspiderfier.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('#tweetsList').niceScroll({cursorcolor:"#0070AF", autohidemode:false});
-
         // Add active class for Results menu
         $('.projectsListNav li:nth-child(2)').addClass('activeMenu');
 
         // Date Picker
         var startDate = $("#st_date");
         var endDate = $("#end_date");
-
         var options = {autoSize: true,
                         dateFormat: "M d, yy",
                         duration: "fast",
@@ -102,69 +101,99 @@
         $.extend(startDateOptions, options, {onClose: function(dateText, inst) {
                 if(dateText) {
                     endDate.datepicker("option", "minDate", dateText);
-                } else {
-                    endDate.datepicker("option", "minDate", '');
                 }
             }
         });
-
         $.extend(endDateOptions, options, {onClose: function(dateText, inst) {
                 if(dateText) {
                     startDate.datepicker("option", "maxDate", dateText);
-                } else {
-                    startDate.datepicker("option", "maxDate", '');
                 }
             }
         });
-
         startDate.datepicker(startDateOptions);
         endDate.datepicker(endDateOptions);
+    });
 
-        // On clicking show this tweet on map
-        $('.tweet').click(function() {
+    var allMarkers = [];
+    var infoWindow;
+
+    // Open info window on clicking Tweet
+    $('.tweet').click(function() {
+        $('.tweet').removeClass('tweetSelected');
+        $(this).addClass('tweetSelected');
+        var postId = $(this).children('input#postId').val();
+
+        // If this post has location show it on map else show notification
+        if(allMarkers[postId]) {
+            googleMap.setZoom(8);
+            googleMap.setCenter(allMarkers[postId].getPosition());
+            infowindow.setContent(allMarkers[postId].html);
+            infowindow.open(googleMap, allMarkers[postId]);
+        } else {
+            infowindow.close();
+            showNotification({
+                message: 'Location details are not available for this message.',
+                type: 'info'
+            });
+        }
+    });
+
+    function showAllGeoLocationsOnMap() {
+        var posts = <?php echo $this->encposts; ?>;
+
+        infowindow = new google.maps.InfoWindow({
+            content: "loading..."
+        });
+        var oms = new OverlappingMarkerSpiderfier(googleMap, {markersWontMove: true, markersWontHide: true});
+        var iconWithColor = function(color) {
+            return 'http://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|+|' + color + '|000000|ffff00';
+        }
+        // Click event to show info window
+        oms.addListener('click', function(marker) {
             $('.tweet').removeClass('tweetSelected');
-            $(this).addClass('tweetSelected');
+            $('#id'+marker.postId).addClass('tweetSelected');
+            window.location.hash = '#id'+marker.postId;
+            infowindow.setContent(marker.html);
+            infowindow.open(googleMap, marker);
+        });
 
-            // Remove marker on map.
-            if(undefined != marker) {
-                marker.setMap(null);
+        // Add spiderfy listener
+        oms.addListener('spiderfy', function(markers) {
+            for(var i = 0; i < markers.length; i++) {
+                markers[i].setIcon(iconWithColor('ffee22'));
             }
-            googleMap.setZoom(2);
-            // Get latitude and longitude coordinates for this post.
-            var latitude = $(this).children('input.latitude').val();
-            var longitude = $(this).children('input.longitude').val();
+            infowindow.close();
+        });
+        // Add unspiderfy listener
+        oms.addListener('unspiderfy', function(markers) {
+            for(var i = 0; i < markers.length; i ++) {
+                markers[i].setIcon(null);
+            }
+        });
 
-            if(latitude == "" || longitude == "") {
-                showNotification({
-                    message: 'Location details are not available for this message.',
-                    type: 'info'
-                });
-            } else {
-                // Hide previous notifications.
-                clearNotification();
+        $.each(posts, function(index, value) {
+            var latitude = value._coordinatesLatitude;
+            var longitude = value._coordinatesLongitude;
 
-                // Show marker on map
-                var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + $(this).children('div.tweetMessage').html() + '</div>';
-                var imageUrl = $(this).children('input.imageUrl').val();
+            if(latitude && longitude) {
+                var messageOnMap = '<div class="onMapContent"> <div class="onMapTitle">' + value._text + '</div>';
+                var imageUrl = value._imageURL;
                 if(imageUrl) {
                     messageOnMap += '<img alt="Image was deleted" src="'+ imageUrl +'" width="400px" height="350px" />';
                 }
                 messageOnMap += '</div>';
 
-                var placedMarker = placeMarkerOnMap(new google.maps.LatLng(latitude, longitude));
-
-                // Set zoom level and center the map.
-                googleMap.setZoom(10);
-                googleMap.setCenter(placedMarker.getPosition());
-
-                var infowindow = new google.maps.InfoWindow({
-                    content: messageOnMap
+                allMarkers[value._id] = new google.maps.Marker({
+                    position: new google.maps.LatLng(latitude, longitude),
+                    map: googleMap,
+                    html: messageOnMap,
+                    postId: value._id
                 });
 
-                google.maps.event.addListener(placedMarker, 'click', function() {infowindow.open(googleMap, placedMarker);});
+                oms.addMarker(allMarkers[value._id]);
             }
         });
-    });
+    }
 
     <?php if(!empty($this->posts)) { ?>
         function initialize() {
@@ -177,6 +206,7 @@
                 minZoom: 2
             }
             googleMap = new google.maps.Map(map_canvas, map_options);
+            showAllGeoLocationsOnMap();
         }
         google.maps.event.addDomListener(window, 'load', initialize);
     <?php } ?>
