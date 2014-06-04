@@ -208,13 +208,15 @@ class ProjectController extends Tm_BaseController
 
         $this->view->id = $project->getId();
         $this->view->project = $project;
-        $this->view->posts = $posts;
 
-        $encPosts = array();
+        $postsArr = array();
         foreach($posts as $post) {
-            $encPosts[] = $post->toArray();
+            $postArr = $post->toArray();
+            $postArr['_createdDateTime'] = date(Tm_Constants::HUMAN_READABLE_DATETIME, strtotime($post->getPostCreatedAt()) + $timeZone * 60);
+
+            $postsArr[] = $postArr;
         }
-        $this->view->encposts = json_encode($encPosts);
+        $this->view->posts = json_encode($postsArr);
         $this->view->timeZone = $timeZone;
     }
 
