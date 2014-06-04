@@ -198,8 +198,8 @@
 
         // If this post has location show it on map else show notification
         if(allMarkers[postId]) {
-//            googleMap.setZoom(8);
-//            googleMap.setCenter(allMarkers[postId].getPosition());
+            googleMap.setZoom(10);
+            googleMap.setCenter(allMarkers[postId].getPosition());
             infowindow.setContent(allMarkers[postId].html);
             infowindow.open(googleMap, allMarkers[postId]);
         } else {
