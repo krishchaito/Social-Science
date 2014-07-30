@@ -23,6 +23,8 @@ class Tm_Twitter
     protected $lastTweetCreatedAt;
     protected $maxSimultaneousRequests = 3;
     protected $query = array();
+    protected $projectStartDateTime = '';
+    protected $projectEndDateTime = '';
 
     protected $hasErrors = false;
     protected $result = array();
@@ -43,6 +45,15 @@ class Tm_Twitter
     public function update(Application_Model_Projects &$project)
     {
         if(Application_Model_Projects::STATUS_CLOSED == $project->getStatus()) {
+            return array();
+        }
+
+        // Twitter API will be called only between project start date Time and End date time
+        $this->projectStartDateTime = strtotime($project->getStartDateTime());
+        $this->projectEndDateTime = strtotime($project->getEndDateTime());
+        $now = strtotime(date(Tm_Constants::MySqlDateTime));
+
+        if($now < $this->projectStartDateTime || $now > $this->projectEndDateTime) {
             return array();
         }
 
@@ -80,7 +91,9 @@ class Tm_Twitter
 
             // Check and Save all results in DB.
             foreach($results->statuses as $tweet) {
-                if(!isset($tweet->retweeted_status)) {
+                // Check if this tweet is in our project date range.
+                $tweetCreatedAt = strtotime($tweet->created_at);
+                if(!isset($tweet->retweeted_status) && ($tweetCreatedAt > $this->projectStartDateTime && $tweetCreatedAt < $this->projectEndDateTime)) {
                     // Check if we already have this tweet
                     $post = new Application_Model_PostsMapper();
                     $result = $post->fetchByPostIdStrAndProjectId($tweet->id_str, $this->project->getId());

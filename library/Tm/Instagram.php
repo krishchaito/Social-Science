@@ -25,6 +25,8 @@ class Tm_Instagram
 
     protected $hasErrors = false;
     protected $result = array();
+    protected $projectStartDateTime = '';
+    protected $projectEndDateTime = '';
 
     // Delete this
     protected $consumerKey = '5mKBk6c6w4mqpbnHZCcByw';
@@ -43,6 +45,16 @@ class Tm_Instagram
         if(Application_Model_Projects::STATUS_CLOSED == $project->getStatus()) {
             return array();
         }
+
+        // Instagram API will be called only between project start date Time and End date time
+        $this->projectStartDateTime = strtotime($project->getStartDateTime());
+        $this->projectEndDateTime = strtotime($project->getEndDateTime());
+        $now = strtotime(date(Tm_Constants::MySqlDateTime));
+
+        if($now < $this->projectStartDateTime || $now > $this->projectEndDateTime) {
+            return array();
+        }
+
         $this->project = $project;
         $this->loadConfig();
 
@@ -79,17 +91,20 @@ class Tm_Instagram
         // Check and Save all results in DB.
         if(200 == $results->meta->code) {
             foreach($results->data as $post) {
-                // Check if we already have this post
-                $postsMapper = new Application_Model_PostsMapper();
-                $explodedData = explode("_", $post->id);
-                $result = $postsMapper->fetchByPostIdStrAndProjectId($explodedData[0], $this->project->getId());
+                // Check if this post is in our project date range.
+                if($post->created_time > $this->projectStartDateTime && $post->created_time < $this->projectEndDateTime) {
+                    // Check if we already have this post
+                    $postsMapper = new Application_Model_PostsMapper();
+                    $explodedData = explode("_", $post->id);
+                    $result = $postsMapper->fetchByPostIdStrAndProjectId($explodedData[0], $this->project->getId());
 
-                if(!is_object($result)) {
-                    $this->savePost($post);
-                    $this->savedResultsCount++;
+                    if(!is_object($result)) {
+                        $this->savePost($post);
+                        $this->savedResultsCount++;
 
-                    if(empty($this->lastPostCreatedAt)) {
-                        $this->lastPostCreatedAt = date('Y-m-d H:i:s', $post->created_time);
+                        if(empty($this->lastPostCreatedAt)) {
+                            $this->lastPostCreatedAt = date('Y-m-d H:i:s', $post->created_time);
+                        }
                     }
                 }
             }
