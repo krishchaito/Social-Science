@@ -39,6 +39,11 @@ class ProjectController extends Tm_BaseController
             if(!$hasError) {
                 $postData['hashTag'] = '#'.$postData['hashTag'];
                 $postData['pid'] = md5($postData['title']);
+
+                // Convert start & end dateTime to GMT
+                $postData['startDateTime'] = date(Tm_Constants::MySqlDateTime, strtotime($postData['startDateTime']));
+                $postData['endDateTime'] = date(Tm_Constants::MySqlDateTime, strtotime($postData['endDateTime']));
+
                 $postData['createdDateTime'] = date(Tm_Constants::MySqlDateTime);
 
                 // Save the project to database.
@@ -60,8 +65,8 @@ class ProjectController extends Tm_BaseController
                 $this->view->description = $postData['description'];
                 $this->view->useTwitter = $postData['useTwitter'];
                 $this->view->useInstagram = $postData['useInstagram'];
-//                $this->view->usePicture = $postData['usePicture'];
-//                $this->view->gpsReq = $postData['gpsReq'];
+                $this->view->startDateTime = $postData['startDateTime'];
+                $this->view->endDateTime = $postData['endDateTime'];
                 $this->view->tweetFormat = $postData['tweetFormat'];
                 $this->view->trackData = unserialize($postData['trackData']);
             }
@@ -257,6 +262,7 @@ class ProjectController extends Tm_BaseController
     public function editAction()
     {
         $params = $this->getRequest()->getParams();
+        $session = $this->getSession();
 
         // Redirect to projects list if we do not have project id
         if(!isset($params['id'])) {
@@ -290,8 +296,11 @@ class ProjectController extends Tm_BaseController
                     $project->setSummary($params['summary']);
                     $project->setUseTwitter($params['useTwitter']);
                     $project->setUseInstagram($params['useInstagram']);
-                    $project->setUsePicture($params['usePicture']);
-                    $project->setGpsReq($params['gpsReq']);
+
+                    // Convert start & end dateTime to GMT
+                    $project->setStartDateTime(date(Tm_Constants::MySqlDateTime, strtotime($params['startDateTime'])));
+                    $project->setEndDateTime(date(Tm_Constants::MySqlDateTime, strtotime($params['endDateTime'])));
+
                     $project->setTrackData($params['trackData']);
                     $project->setTweetFormat($params['tweetFormat']);
                     $project->save();
@@ -305,8 +314,13 @@ class ProjectController extends Tm_BaseController
                     $this->view->description = $params['description'];
                     $this->view->useTwitter = $params['useTwitter'];
                     $this->view->useInstagram = $params['useInstagram'];
-                    $this->view->usePicture = $params['usePicture'];
-                    $this->view->gpsReq = $params['gpsReq'];
+
+                    $projectStartTime = strtotime($params['startDateTime']) + $session->getTimeZone() * 60;
+                    $projectEndTime = strtotime($params['endDateTime']) + $session->getTimeZone() * 60;
+                    $userTimeZone = substr($session->getTimeZone(), 0, 1).date('H:i', substr($session->getTimeZone(), 1)*60);
+                    $this->view->startDateTime = date(Tm_Constants::DATE_TIME_PICKER_FORMAT, $projectStartTime). ' '.$userTimeZone;
+                    $this->view->endDateTime = date(Tm_Constants::DATE_TIME_PICKER_FORMAT, $projectEndTime). ' '.$userTimeZone;
+
                     $this->view->tweetFormat = $params['tweetFormat'];
                     $this->view->trackData = unserialize($params['trackData']);
 
@@ -320,8 +334,13 @@ class ProjectController extends Tm_BaseController
                 $this->view->description = $project->getDescription();
                 $this->view->useTwitter = $project->getUseTwitter();
                 $this->view->useInstagram = $project->getUseInstagram();
-                $this->view->usePicture = $project->getUsePicture();
-                $this->view->gpsReq = $project->getGpsReq();
+
+                $projectStartTime = strtotime($project->getStartDateTime()) + $session->getTimeZone() * 60;
+                $projectEndTime = strtotime($project->getEndDateTime()) + $session->getTimeZone() * 60;
+                $userTimeZone = substr($session->getTimeZone(), 0, 1).date('H:i', substr($session->getTimeZone(), 1)*60);
+                $this->view->startDateTime = date(Tm_Constants::DATE_TIME_PICKER_FORMAT, $projectStartTime). ' '.$userTimeZone;
+                $this->view->endDateTime = date(Tm_Constants::DATE_TIME_PICKER_FORMAT, $projectEndTime). ' '.$userTimeZone;
+
                 $this->view->tweetFormat = $project->getTweetFormat();
 
                 $trackData = unserialize($project->getTrackData());

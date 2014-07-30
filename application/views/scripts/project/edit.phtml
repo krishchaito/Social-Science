@@ -1,5 +1,5 @@
 <?php
-    if(isset($this->errorMsg)) {
+    if(!empty($this->errorMsg)) {
         echo $this->errorMsg;
     } else {
         echo $this->render('/project/create.phtml');

@@ -16,6 +16,8 @@ class Tm_Validate
         $postData['usePicture'] = ('on' === Tm_Atrizine::GetValue($postData['usePicture'], 0)) ? 1 : 0;
         $postData['gpsReq'] = ('on' === Tm_Atrizine::GetValue($postData['gpsReq'], 0)) ? 1 : 0;
         $postData['tweetFormat'] = trim(Tm_Atrizine::GetValue($postData['tweetFormat'], ''));
+        $postData['startDateTime'] = trim(Tm_Atrizine::GetValue($postData['startDateTime'], ''));
+        $postData['endDateTime'] = trim(Tm_Atrizine::GetValue($postData['endDateTime'], ''));
 
         $trackCounter = count($postData['trackName']);
         $trackData = array();
@@ -32,7 +34,8 @@ class Tm_Validate
 
         $postData['trackData'] = serialize($trackData);
 
-        if(!$hasTrackData || empty($postData['title']) || empty($postData['hashTag']) || empty($postData['summary']) || empty($postData['description']) || empty($postData['tweetFormat'])) {
+        if(!$hasTrackData || empty($postData['title']) || empty($postData['hashTag']) || empty($postData['summary']) || empty($postData['description'])
+            || empty($postData['tweetFormat']) || empty($postData['startDateTime']) || empty($postData['endDateTime'])) {
             $hasError = true;
         }
 

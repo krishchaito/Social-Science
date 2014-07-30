@@ -19,7 +19,6 @@
                 <label class="inputLabel">Hash tag <span class="required">*</span></label>
                 <div class="inputEle">
                     # <input type="text" name="hashTag" size="48" placeholder="Enter your project HashTag" id="hashTag" value="<?php echo ($this->hashTag) ? ltrim($this->hashTag, '#') : '';?>" />
-<!--                    <button class="primary mediumButton" id="hashTagEdit">Edit</button>-->
                 </div>
             </div>
 
@@ -34,6 +33,14 @@
                 <label class="inputLabel">Description <span class="required">*</span></label>
                 <div class="inputEle">
                     <textarea name="description" id="description" cols="75" rows="10" placeholder="Detailed description of your project"><?php echo ($this->description) ? $this->description : '';?></textarea>
+                </div>
+            </div>
+
+            <div class="clearfix formGrp">
+                <label class="inputLabel">Project Date Range <span class="required">*</span></label>
+                <div class="inputEle">
+                    <input type="text" value="<?php echo ($this->startDateTime) ? $this->startDateTime : '';?>" placeholder="Start Date & Time" size="30" name="startDateTime" id="startDateTime" readonly /> -
+                    <input type="text" value="<?php echo ($this->endDateTime) ? $this->endDateTime : '';?>" placeholder="End Date & Time" size="30" name="endDateTime" id="endDateTime" readonly />
                 </div>
             </div>
 
@@ -53,20 +60,6 @@
                     <label class="inputEle">Instagram</label>
                 </div>
             </div>
-
-<!--            <div class="clearfix formGrp">-->
-<!--                <div class="inputLabel">-->
-<!--                    <input type="checkbox" name="usePicture" size="50" --><?php //echo ($this->usePicture) ? 'checked' : '';?><!-- />-->
-<!--                </div>-->
-<!--                <label class="inputEle">Attempt to use picture?</label>-->
-<!--            </div>-->
-<!---->
-<!--            <div class="clearfix formGrp">-->
-<!--                <div class="inputLabel">-->
-<!--                    <input type="checkbox" name="gpsReq" size="50" --><?php //echo ($this->gpsReq) ? 'checked' : '';?><!-- />-->
-<!--                </div>-->
-<!--                <label class="inputEle">Is GPS Required?</label>-->
-<!--            </div>-->
 
             <div class="sectionGrp trackInfo">
                 <div class="sectionTitle">What do you want to track? <span class="required">*</span></div>
@@ -112,10 +105,6 @@
                 <input type="submit" class="primary mediumButton" id="createProj" name="submit" value="<?php echo (!empty($this->id)) ? 'Update' : 'Create'; ?>" />
                 <input type="button" class="primary mediumButton" id="cancelProj" value="Cancel" />
             </div>
-
-<!--            <?php /*if(!empty($this->id)) { */?>
-                <input type="hidden" name="id" value="<?php /*echo $this->id;*/?>" />
-            --><?php /*} */?>
         </div>
     </form>
 </div>
@@ -186,18 +175,38 @@
             generateTweetFormat();
         });
 
-//        $("#hashTagEdit").click(function(event) {
-//            if('Edit' == this.innerHTML) {
-//                $("input#hashTag").prop('disabled', false);
-//                this.innerHTML = 'Done';
-//                event.preventDefault();
-//            } else if('Done' == this.innerHTML) {
-//                $("input#hashTag").prop('disabled', true);
-//                this.innerHTML = 'Edit';
-//                event.preventDefault();
+        // Date and Time Picker
+        var startDateTimeEle = $("#startDateTime");
+        var endDateTimeEle = $("#endDateTime");
+        var dateTimePickerOpts = {
+            timeFormat: "hh:mm TT Z",
+            dateFormat: "yy-mm-dd",
+            minDate: new Date(),
+            showTimezone: true
+        };
+        var startDateTimePickerOpts = {};
+        var endDateTimePickerOpts = {};
+        $.extend(startDateTimePickerOpts, dateTimePickerOpts, {onClose: function(dateText, inst) {
+//            if (dateText) {
+//                var startDateTime = startDateTimeEle.datetimepicker('getDate');
+//                var endDateTime = endDateTimeEle.datetimepicker('getDate');
+//                if(endDateTime) {
+//                    $('#totalEstimatedTaskTime').html('Total Time - ' + endDateTime - startDateTime);
+//                }
 //            }
+        }
+        });
+        $.extend(endDateTimePickerOpts, dateTimePickerOpts, {onClose: function(dateText, inst) {
+//            if (dateText) {
+//                var startDateTime = startDateTimeEle.datetimepicker('getDate');
+//                var endDateTime = endDateTimeEle.datetimepicker('getDate');
+//                if(startDateTime) {
 //
-//            event.preventDefault();
-//        });
+//                }
+//            }
+        }
+        });
+        startDateTimeEle.datetimepicker(startDateTimePickerOpts);
+        endDateTimeEle.datetimepicker(endDateTimePickerOpts);
     });
 </script>

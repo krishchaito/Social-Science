@@ -13,8 +13,8 @@ class Application_Model_Projects extends Application_Model_Db
     protected $_description = '';
     protected $_useTwitter = 0;
     protected $_useInstagram = 0;
-    protected $_usePicture = 0;
-    protected $_gpsReq = 0;
+    protected $_startDateTime = '0000-00-00 00:00:00';
+    protected $_endDateTime = '0000-00-00 00:00:00';
     protected $_tweetFormat = '';
     protected $_trackData = '';
     protected $_numOfTweets = 0;
@@ -65,23 +65,6 @@ class Application_Model_Projects extends Application_Model_Db
     public function getDescription()
     {
         return $this->_description;
-    }
-
-    /**
-     * @param mixed $gpsReq
-     */
-    public function setGpsReq($gpsReq)
-    {
-        $this->_gpsReq = $gpsReq;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGpsReq()
-    {
-        return $this->_gpsReq;
     }
 
     /**
@@ -221,23 +204,6 @@ class Application_Model_Projects extends Application_Model_Db
     }
 
     /**
-     * @param mixed $usePicture
-     */
-    public function setUsePicture($usePicture)
-    {
-        $this->_usePicture = $usePicture;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsePicture()
-    {
-        return $this->_usePicture;
-    }
-
-    /**
      * @param mixed $useTwitter
      */
     public function setUseTwitter($useTwitter)
@@ -320,6 +286,40 @@ class Application_Model_Projects extends Application_Model_Db
     public function getNumOfTweets()
     {
         return $this->_numOfTweets;
+    }
+
+    /**
+     * @param string $endDate
+     */
+    public function setEndDateTime($endDateTime)
+    {
+        $this->_endDateTime = $endDateTime;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndDateTime()
+    {
+        return $this->_endDateTime;
+    }
+
+    /**
+     * @param string $startDate
+     */
+    public function setStartDateTime($startDateTime)
+    {
+        $this->_startDateTime = $startDateTime;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStartDateTime()
+    {
+        return $this->_startDateTime;
     }
 
     public function save()
